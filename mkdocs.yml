@@ -4,7 +4,7 @@ site_url: https://forlinxembedded.github.io/forlinx-online-docs/
 
 theme:
   name: material
-  logo: images/forlinxembedded.jpg
+  logo: images/forlinxembedded.png
   palette:
     primary:
       main: "#123456"     # 主色调
@@ -20,10 +20,17 @@ theme:
   
 nav:
   - 首页: index.md
-  - 使用说明: usage.md
-  - API文档: api.md
+  - 硬件文档:
+      - i.MX6ULL 简介: hardware/imx6ull-zh.md
+      - 烧写系统: hardware/烧写系统.md
 
 repo_url: https://forlinxembedded.github.io/forlinx-online-docs/
 edit_uri: edit/main/docs/
 
 
+plugins:
+  - with-pdf
+
+# 可选：自定义输出路径
+with-pdf:
+  output_path: pdf/forlinx-docs.pdf
