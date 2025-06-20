@@ -28,9 +28,3 @@ repo_url: https://forlinxembedded.github.io/forlinx-online-docs/
 edit_uri: edit/main/docs/
 
 
-plugins:
-  - with-pdf
-
-# 可选：自定义输出路径
-with-pdf:
-  output_path: pdf/forlinx-docs.pdf

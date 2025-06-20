@@ -8,13 +8,11 @@
       
       
       
-        <link rel="canonical" href="https://forlinxembedded.github.io/forlinx-online-docs/hardware/imx6ull-zh/">
+        <link rel="canonical" href="https://forlinxembedded.github.io/forlinx-online-docs/hardware/%E7%83%A7%E5%86%99%E7%B3%BB%E7%BB%9F/">
       
       
-        <link rel="prev" href="../..">
+        <link rel="prev" href="../imx6ull-zh/">
       
-      
-        <link rel="next" href="../%E7%83%A7%E5%86%99%E7%B3%BB%E7%BB%9F/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +20,7 @@
     
     
       
-        <title>i.MX6ULL 简介 - Forlinx Embedded Docs</title>
+        <title>烧写系统 - Forlinx Embedded Docs</title>
       
     
     
@@ -71,6 +69,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#51-otg" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -102,7 +105,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              i.MX6ULL 简介
+              烧写系统
             
           </span>
         </div>
@@ -280,17 +283,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../imx6ull-zh/" class="md-nav__link">
         
   
   
@@ -301,7 +297,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -311,10 +306,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../%E7%83%A7%E5%86%99%E7%B3%BB%E7%BB%9F/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    烧写系统
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -325,6 +340,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#51-otg" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 OTG烧写系统
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1 OTG烧写系统">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#511-otg" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1.1 OTG驱动安装
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#512-otg" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1.2 OTG完全烧写测试
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1.2 OTG完全烧写测试">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5121-rkdevtool" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1.2.1 RKDevTool烧写测试
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-tf" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 TF 卡烧写系统
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -355,6 +445,71 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#51-otg" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 OTG烧写系统
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1 OTG烧写系统">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#511-otg" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1.1 OTG驱动安装
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#512-otg" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1.2 OTG完全烧写测试
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1.2 OTG完全烧写测试">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5121-rkdevtool" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1.2.1 RKDevTool烧写测试
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-tf" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 TF 卡烧写系统
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -372,29 +527,55 @@
   
 
 
-  <h1>i.MX6ULL 简介</h1>
+  <h1>烧写系统</h1>
 
-<p>Freescale i.MX6UltraLite扩展了i.MX6系列，它是一个高性能、超高效处理器子系列，采用先进的ARM Cortex-A7内核，运行速度高达528MHz。i.MX6UltraLite应用处理器包括一个集成的电源管理模块，降低了外接电源的复杂性，并简化了上电时序，目标应用有：</p>
-<p>·汽车远程信息处理</p>
-<p>·IoT网关</p>
-<p>·人机界面</p>
-<p>·家庭能源管理系统</p>
-<p>·智能能源信息集中器</p>
-<p>·智能工业控制系统</p>
-<p>·电子POS设备</p>
-<p>·便携医疗设备</p>
-<p>·打印机和2D扫描仪</p>
-<p>……</p>
-<p><strong>i.MX6UltraLite应用处理器框图</strong></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45534235/1720509425286-70b59293-3de7-4eac-adbc-f949536af53a.png" /></p>
-<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45534235/1720509425540-732781ff-769a-4de3-8487-ff9c0298b7f1.png" /></p>
-<p>FETMX6UL-C核心板CPU采用的是MCIMX6G2。</p>
-<p>i.MX6UltraLite子系列的每个型号提供多种存储器接口，其中包括16位LPDDR2、DDR3、DDR3L、普通NAND闪存以及内置管理单元的NAND闪存、NOR闪存、eMMC、Quad SPI等接口，以及外设接口，用于连接如WLAN、Bluetooth、GPS、显示器和摄像头传感器。i.MX6UltraLite子系列由分立器件电源电路支持。</p>
-<p>更多关于i.MX6UltraLite的内容请浏览NXP（原Freescale）官方网站：</p>
-<p>中文URL：</p>
-<p><a href="http://www.nxp.com/zh-Hans/products/microcontrollers-and-processors/arm-processors/i.mx-applications-processors-based-on-arm-cores/i.mx-6-processors/i.mx6qp/i.mx-6ultralite-processor-low-power-secure-arm-cortex-a7-core:i.MX6UL?uc=true&amp;lang_cd=zh-Hans">http://www.nxp.com/zh-Hans/products/microcontrollers-and-processors/arm-processors/i.mx-applications-processors-based-on</a>-arm-cores/i.mx-6-processors/i.mx6qp/i.mx-6ultralite-processor-low-power-secure-arm-cortex-a7-core:i.MX6UL?uc=true&amp;lang_cd=zh-Hans</p>
-<p>英文URL：</p>
-<p><a href="http://www.nxp.com/products/microcontrollers-and-processors/arm-processors/i.mx-applications-processors-based-on-arm-cores/i.mx-6-processors/i.mx6qp/i.mx-6ultralite-processor-low-power-secure-arm-cortex-a7-core:i.MX6UL?uc=true&amp;lang_cd=en">http://www.nxp.com/products/microcontrollers-and-processors/arm-processors/i.mx-applications-processors-based-on-arm-cores/i.mx-6-processors/i.mx6qp/i.mx-6ultralite-processor-low-power-secure-arm-cortex-a7-core:i.MX6UL?uc=true&amp;lang_cd=en</a></p>
+<pre><code class="language-plain">OK3576-C开发板目前支持OTG烧写方式。在用户资料中提供了相应的烧写工具。
+</code></pre>
+<h2 id="51-otg">5.1 OTG烧写系统</h2>
+<h3 id="511-otg">5.1.1 OTG驱动安装</h3>
+<ul>
+<li>路径：OK3576-C（Linux）用户资料\Linux\工具</font>DriverAssitant_v5.11.zip</li>
+</ul>
+<p>将上述路径文件解压到任意目录，以管理员权限运行</p>
+<p>打开DriverInstall.exe 程序。</p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45535139/1726214251487-8975ec46-6ec0-47ed-9a87-15161a370c5e.png" /></p>
+<p>点击“驱动安装”。</p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45535139/1726214251723-98517c31-82d2-4e6d-9c09-9a214f28b101.png" /></p>
+<h3 id="512-otg">5.1.2 OTG完全烧写测试</h3>
+<h4 id="5121-rkdevtool"><strong>5.1.2.1 RKDevTool烧写测试</strong></h4>
+<ul>
+<li>路径：OK3576-C（Linux）用户资料\Linux\工具</font> RKDevTool_Release_v3.31.zip</li>
+</ul>
+<p>这是瑞芯微提供的一款开发工具，使用前将其解压到全英文路径下，用Type-C线连接开发板TYPE-C0口和主机，按住开发板的recovery键不要松开，然后按一下reset键系统复位，大约两秒后松开recovery键。瑞芯微开发工具上将提示发现loader设备。</p>
+<ul>
+<li>注意：识别设备的操作是开发板上电时recover按键是按下的状态。</li>
+<li>注意：理论上瑞芯微开发工具解压目录随意，但有用户反馈瑞芯微开发工具解压目录需为全英文，若打开开发工具后与下图不一致，请考虑解压其在全英文目录下。</li>
+</ul>
+<p>打开瑞芯微开发工具：</p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45535139/1726214251923-5d6fc68a-776a-4953-b536-b7b35c6effaf.png" /></p>
+<p>点击“切换“等待一会进入LOADER设备。根据自己镜像的位置调整镜像路径，然后勾选要更新的镜像，然后点击“执行”按钮进行升级。</p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45535139/1726214252140-763ec0df-048e-4a14-9170-8a21b942cdf0.png" /></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45535139/1726214252417-4afe701b-2b6c-4589-9ab3-b1ba0edbbb57.png" /></p>
+<h3 id="52-tf">5.2 TF 卡烧写系统</h3>
+<p><font style="color:#000000;">烧写 TF 卡制作与烧写测试 </font></p>
+<p><font style="color:#000000;">注意：测试 TF 卡容量最大为 32G，使用 32G 以上 TF 卡可能会烧写失败。 </font></p>
+<p><font style="color:#000000;">将用户资料工具目录的 SDDiskTool_v1.76.zip拷贝到 windows 任意目录。以管理员权限运行 </font></p>
+<p><font style="color:#000000;">SD_Firmware_Tool.exe。</font></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45535139/1726214252666-a91fc93c-b5bf-476b-bff2-ebe975b5ea7b.png" /></p>
+<p><font style="color:#000000;">选择磁盘设备，勾选“固件升级”，并选择 update.img。点击开始创建。</font></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45535139/1726214252868-8740d473-a961-43fe-8444-8cc7f9e007ac.png" /></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45535139/1726214253092-fcfe76c3-478e-41b5-bf25-b53b68a368d6.png" /></p>
+<p><font style="color:#000000;">将 TF 卡插入开发板并启动，系统将自动进入烧写流程。烧写完成后屏幕和串口都将提示： </font></p>
+<p><font style="color:#000000;">Please remove SD CARD!!!, wait for reboot. </font></p>
+<p><font style="color:#000000;">此时，拔出 TF 卡，系统自动重新启动(请勿直接断电)。 </font></p>
+<p><font style="color:#000000;">批量生产时，可以根据核心板的心跳灯来判断烧写是否完成，烧写过程中的心跳灯变化如下： </font></p>
+<p><font style="color:#000000;">1、内核启动阶段：心跳灯模式，规律的间歇性闪烁。 </font></p>
+<p><font style="color:#000000;">2、烧写准备阶段：EMMC 指示灯，熄灭。 </font></p>
+<p><font style="color:#000000;">3、烧写进行阶段：EMMC 指示灯，常亮。 </font></p>
+<p><font style="color:#000000;">4、烧写完成阶段：心跳灯模式，规律的间歇性闪烁。 </font></p>
+<p><font style="color:#000000;">烧写状态串口信息：</font></p>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/45535139/1726214253365-d2c3acc8-5556-408b-9a88-7b9305caf707.png" /></p>
+<p><font style="color:#000000;">若移除 TF 未自动重启，手动重启也可完成烧写。烧写过程中请耐心等待。</font></p>
 
 
 
