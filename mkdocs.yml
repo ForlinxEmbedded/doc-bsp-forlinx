@@ -1,14 +1,29 @@
 site_name: Forlinx Embedded Docs
 
-site_url: https://github.com/forlinxembedded/doc-bsp-forlinx
+site_url: https://forlinxembedded.github.io/forlinx-online-docs/
 
 theme:
   name: material
+  logo: images/forlinxembedded.jpg
+  palette:
+    primary:
+      main: "#123456"     # 主色调
+      light: "#56789a"
+      dark: "#0f1a2b"
+    accent:
+      main: "#abcdef"     # 强调色
 
+  font:
+    text: "Open Sans"
+    code: "Fira Code"
+
+  
 nav:
   - 首页: index.md
   - 使用说明: usage.md
   - API文档: api.md
 
-repo_url: https://github.com/forlinxembedded/doc-bsp-forlinx
+repo_url: https://forlinxembedded.github.io/forlinx-online-docs/
 edit_uri: edit/main/docs/
+
+
