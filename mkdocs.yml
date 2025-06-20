@@ -1,0 +1,14 @@
+site_name: Forlinx Embedded Docs
+
+site_url: https://github.com/forlinxembedded/doc-bsp-forlinx
+
+theme:
+  name: material
+
+nav:
+  - 首页: index.md
+  - 使用说明: usage.md
+  - API文档: api.md
+
+repo_url: https://github.com/forlinxembedded/doc-bsp-forlinx
+edit_uri: edit/main/docs/
