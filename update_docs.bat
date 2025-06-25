@@ -6,30 +6,30 @@ echo [1/4] Committing changes to Git...
 git add . >nul 2>&1
 git commit -m "Auto update" >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ❌ Git commit failed or nothing to commit.
+    echo  Git commit failed or nothing to commit.
 ) else (
-    echo ✅ Git commit success.
+    echo  Git commit success.
 )
 
 git push origin main >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ❌ Git push failed.
+    echo  Git push failed.
 ) else (
-    echo ✅ Git push success.
+    echo  Git push success.
 )
 
 echo [2/4] Building documentation...
-python -m mkdocs build >nul 2>&1
+mkdocs build >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ❌ MkDocs build failed.
+    echo  MkDocs build failed.
     pause
     exit /b
 ) else (
-    echo ✅ MkDocs build success.
+    echo  MkDocs build success.
 )
 
 echo [3/4] Deploying to GitHub Pages...
-python -m mkdocs gh-deploy --clean >nul 2>&1
+mkdocs gh-deploy --clean >nul 2>&1
 if %errorlevel% neq 0 (
     echo ❌ MkDocs deploy failed.
     pause
