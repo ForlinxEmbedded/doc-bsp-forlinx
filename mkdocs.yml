@@ -1,30 +1,29 @@
 site_name: Forlinx Embedded Docs
-
 site_url: https://forlinxembedded.github.io/forlinx-online-docs/
 
 theme:
   name: material
   logo: images/forlinxembedded.png
-  palette:
-    primary:
-      main: "#123456"     # 主色调
-      light: "#56789a"
-      dark: "#0f1a2b"
-    accent:
-      main: "#abcdef"     # 强调色
-
+  favicon: images/forlinxembedded.png
+  custom_dir: overrides
   font:
     text: "Open Sans"
     code: "Fira Code"
 
-  
+extra_css:
+  - stylesheets/overrides.css
+
 nav:
   - 首页: index.md
   - 硬件文档:
       - i.MX6ULL 简介: hardware/imx6ull-zh.md
       - 烧写系统: hardware/烧写系统.md
+  - 软件文档:
+      - rk3576 linux: software/rk3576-linux-zh.md
 
-repo_url: https://forlinxembedded.github.io/forlinx-online-docs/
+repo_url: https://github.com/forlinxembedded/forlinx-online-docs
 edit_uri: edit/main/docs/
 
-
+plugins:
+  - search
+ 
