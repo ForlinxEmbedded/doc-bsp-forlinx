@@ -19,7 +19,7 @@ if %errorlevel% neq 0 (
 )
 
 echo [2/4] Building documentation...
-mkdocs build >nul 2>&1
+python -m mkdocs build >nul 2>&1
 if %errorlevel% neq 0 (
     echo ❌ MkDocs build failed.
     pause
@@ -29,7 +29,7 @@ if %errorlevel% neq 0 (
 )
 
 echo [3/4] Deploying to GitHub Pages...
-mkdocs gh-deploy --clean >nul 2>&1
+python -m mkdocs gh-deploy --clean >nul 2>&1
 if %errorlevel% neq 0 (
     echo ❌ MkDocs deploy failed.
     pause
