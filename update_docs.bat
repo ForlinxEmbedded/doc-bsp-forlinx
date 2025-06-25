@@ -1,6 +1,6 @@
 @echo off
 title Forlinx Docs Auto Update & Deploy
-cd /d %~dp0
+cd /d D:\Documents\GitHub\forlinx\forlinx-online-docs
 
 echo [1/4] Committing changes to Git...
 git add . >nul 2>&1
