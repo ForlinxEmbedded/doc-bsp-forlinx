@@ -2,9 +2,48 @@
 /* Forlinx 风格配色覆盖 */
 
 :root {
-  --md-primary-fg-color:        #0066cc;
+  --md-primary-fg-color:        #0066CC;
   --md-primary-fg-color--light: #4da6ff;
   --md-primary-fg-color--dark:  #003366;
 
   --md-accent-fg-color:         #0066cc;
+}
+
+
+
+/* 统一蓝色信息块样式 */
+.info-box {
+  background-color: #ffffff;         /* 柔和蓝色背景 */
+  padding: 1.5em 2em;
+  margin: 2em 0;
+  border-radius: 6px;
+  line-height: 1.8;
+  font-size: 1.05em;
+  color: #1a1a1a;
+}
+
+/* 居中文本块（用于结尾感谢语） */
+.center-text {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* 一级/二级标题间距增强 */
+h1, h2 {
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+/* 链接颜色统一为蓝色调 */
+.md-content a {
+  color: #0066CC;
+  text-decoration: none;
+}
+.md-content a:hover {
+  text-decoration: underline;
+}
+
+/* 列表项间距增加 */
+ul li {
+  margin-bottom: 0.4em;
 }
