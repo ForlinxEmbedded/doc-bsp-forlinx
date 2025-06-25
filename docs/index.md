@@ -1,17 +1,13 @@
 # Welcome to the Forlinx Embedded Documentation
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+This platform provides comprehensive software and hardware development documentation for Forlinx embedded products, covering system flashing, driver porting, kernel compilation, debugging tools, and more. It aims to help engineers get started quickly and develop embedded applications efficiently.
 
-## Commands
+The documentation includes product platforms based on mainstream processors such as NXP, Rockchip, and TI, and will be continuously updated and maintained.
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+If you encounter any issues or need technical support during use, please contact us through the following channels:
 
-## Project layout
+- 🌐 Official Website: [https://www.forlinx.net](https://www.forlinx.net)
+- 📧 Technical Support Email: [linux@forlinx.com](mailto:linux@forlinx.com), [hardware@forlinx.com](mailto:hardware@forlinx.com)
+- 📧 Sales Inquiry Email: [sales@forlinx.com](mailto:sales@forlinx.com)
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+Thank you for choosing Forlinx embedded products.
