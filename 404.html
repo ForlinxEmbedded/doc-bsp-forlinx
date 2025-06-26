@@ -71,6 +71,7 @@
     </div>
     
     
+  
       
 
   
@@ -165,6 +166,79 @@
   
 </header>
     
+  <style>
+    .pdf-nav-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.4rem 0.8rem;
+      background-color: #0066cc;
+      color: #fff;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      margin-left: 1rem;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+    }
+  
+    .pdf-nav-button:hover {
+      background-color: #004999;
+      text-decoration: none;
+    }
+  
+    .pdf-nav-button i {
+      margin-right: 0.5em;
+      font-size: 1rem;
+    }
+  
+    @media (max-width: 768px) {
+      .pdf-nav-button {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        margin-left: 0.5rem;
+      }
+      .pdf-nav-button i {
+        font-size: 0.9rem;
+        margin-right: 0.4em;
+      }
+    }
+  
+    @media (max-width: 480px) {
+      .pdf-nav-button {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.5rem;
+      }
+      .pdf-nav-button i {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+  
+  <script>
+    // 可选：当页面未定义 pdf 路径时隐藏按钮
+    document.addEventListener("DOMContentLoaded", () => {
+      const link = document.querySelector("#pdf-download-nav");
+      if (link && !link.href.endsWith(".pdf")) {
+        link.style.display = "none";
+      }
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const githubButton = document.querySelector(".md-header__source");
+      if (githubButton) {
+        const pdfButton = document.createElement("a");
+        const currentPath = window.location.pathname;
+        const pdfPath = currentPath.replace(/\.html$/, ".pdf");
+        pdfButton.id = "pdf-download-nav";
+        pdfButton.href = pdfPath;
+        pdfButton.className = "pdf-nav-button";
+        pdfButton.innerHTML = '<i class="fas fa-file"></i> Download PDF';
+        githubButton.insertAdjacentElement("afterend", pdfButton);
+      }
+    });
+  </script>
+
     <div class="md-container" data-md-component="container">
       
       
@@ -304,74 +378,6 @@
   
   <span class="md-ellipsis">
     烧写系统
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    软件文档
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            软件文档
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="/forlinx-online-docs/software/rk3576-linux-zh/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    rk3576 linux
     
   </span>
   
