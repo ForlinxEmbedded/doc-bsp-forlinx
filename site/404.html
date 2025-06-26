@@ -71,6 +71,7 @@
     </div>
     
     
+  
       
 
   
@@ -165,6 +166,79 @@
   
 </header>
     
+  <style>
+    .pdf-nav-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.4rem 0.8rem;
+      background-color: #0066cc;
+      color: #fff;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      margin-left: 1rem;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+    }
+  
+    .pdf-nav-button:hover {
+      background-color: #004999;
+      text-decoration: none;
+    }
+  
+    .pdf-nav-button i {
+      margin-right: 0.5em;
+      font-size: 1rem;
+    }
+  
+    @media (max-width: 768px) {
+      .pdf-nav-button {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        margin-left: 0.5rem;
+      }
+      .pdf-nav-button i {
+        font-size: 0.9rem;
+        margin-right: 0.4em;
+      }
+    }
+  
+    @media (max-width: 480px) {
+      .pdf-nav-button {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.5rem;
+      }
+      .pdf-nav-button i {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+  
+  <script>
+    // 可选：当页面未定义 pdf 路径时隐藏按钮
+    document.addEventListener("DOMContentLoaded", () => {
+      const link = document.querySelector("#pdf-download-nav");
+      if (link && !link.href.endsWith(".pdf")) {
+        link.style.display = "none";
+      }
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const githubButton = document.querySelector(".md-header__source");
+      if (githubButton) {
+        const pdfButton = document.createElement("a");
+        const currentPath = window.location.pathname;
+        const pdfPath = currentPath.replace(/\.html$/, ".pdf");
+        pdfButton.id = "pdf-download-nav";
+        pdfButton.href = pdfPath;
+        pdfButton.className = "pdf-nav-button";
+        pdfButton.innerHTML = '<i class="fas fa-file"></i> Download PDF';
+        githubButton.insertAdjacentElement("afterend", pdfButton);
+      }
+    });
+  </script>
+
     <div class="md-container" data-md-component="container">
       
       
