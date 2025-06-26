@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=D:\Github\MkDocs\my-doc-site\venv
+set VIRTUAL_ENV=D:\Documents\GitHub\forlinx\forlinx-online-docs\venv
 
 if not defined PROMPT set PROMPT=$P$G
 
