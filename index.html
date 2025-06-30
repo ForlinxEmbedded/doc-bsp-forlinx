@@ -232,21 +232,34 @@
       }
     });
   </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const githubButton = document.querySelector(".md-header__source");
-      if (githubButton) {
-        const pdfButton = document.createElement("a");
-        const currentPath = window.location.pathname;
-        const pdfPath = currentPath.replace(/\.html$/, ".pdf");
-        pdfButton.id = "pdf-download-nav";
-        pdfButton.href = pdfPath;
-        pdfButton.className = "pdf-nav-button";
-        pdfButton.innerHTML = '<i class="fas fa-file"></i> Download PDF';
-        githubButton.insertAdjacentElement("afterend", pdfButton);
-      }
-    });
-  </script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const githubButton = document.querySelector(".md-header__source");
+    if (githubButton) {
+      const pdfButton = document.createElement("a");
+
+      const currentPath = window.location.pathname;
+
+      // 获取页面所在目录名，例如 /product/imx6ull/ → imx6ull
+      const pathParts = currentPath.split("/").filter(p => p); // 去除空字符串
+      const folderName = pathParts[pathParts.length - 1] === "index.html"
+        ? pathParts[pathParts.length - 2]
+        : pathParts[pathParts.length - 1];
+
+      // 构造 PDF 路径：/product/imx6ull/imx6ull.pdf
+      const pdfPath = `${pathParts.slice(0, -1).join("/")}/${folderName}.pdf`;
+
+      pdfButton.id = "pdf-download-nav";
+      pdfButton.href = `/${pdfPath}`;
+      pdfButton.className = "pdf-nav-button";
+      pdfButton.setAttribute("download", `${folderName}.pdf`);
+      pdfButton.innerHTML = '<i class="fas fa-file-pdf"></i> Download PDF';
+
+      githubButton.insertAdjacentElement("afterend", pdfButton);
+    }
+  });
+</script>
+
 
     <div class="md-container" data-md-component="container">
       
