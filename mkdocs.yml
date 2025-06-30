@@ -17,7 +17,7 @@ nav:
   - 首页: index.md
   - 硬件文档:
       - i.MX6ULL 简介: hardware/imx6ull-zh.md
-      - 烧写系统: hardware/烧写系统.md
+      - 烧写系统: hardware/firmware-zh.md
   
     
 
