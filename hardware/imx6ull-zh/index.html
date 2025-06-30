@@ -235,21 +235,15 @@
     if (githubButton) {
       const pdfButton = document.createElement("a");
 
-      const currentPath = window.location.pathname;
-
-      const pathParts = currentPath.split("/").filter(p => p); // 去除空字符串
+      const currentPath = decodeURIComponent(window.location.pathname);
+      const pathParts = currentPath.split("/").filter(p => p);
 
       const folderName = pathParts[pathParts.length - 1] === "index.html"
         ? pathParts[pathParts.length - 2]
         : pathParts[pathParts.length - 1];
 
-      // 父路径
-      const parentPath = pathParts.slice(0, -1).join("/");
-
-      // 如果 parentPath 为空，则直接用根目录加文件名，否则加斜杠拼接
-      const pdfPath = parentPath
-        ? `/${parentPath}/${folderName}.pdf`
-        : `/${folderName}.pdf`;
+      // 生成同目录下的 PDF 路径
+      const pdfPath = `${window.location.pathname.replace(/index\.html$/, "")}${folderName}.pdf`;
 
       pdfButton.id = "pdf-download-nav";
       pdfButton.href = pdfPath;
@@ -261,6 +255,7 @@
     }
   });
 </script>
+
 
 
     <div class="md-container" data-md-component="container">
