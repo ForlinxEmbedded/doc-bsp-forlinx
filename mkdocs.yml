@@ -30,7 +30,8 @@ plugins:
       combined: false
       verbose: true
       media_type: print
-
+      cover: false   # 禁用封面页（如果插件支持）
+      toc: false     # 禁用目录页（如果目录被单独成页）
 
 
 
