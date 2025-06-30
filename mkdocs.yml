@@ -26,10 +26,11 @@ edit_uri: edit/main/docs/
 
 plugins:
   - search
-   - pdf-export:
+  - pdf-export:
       combined: false
       verbose: true
       media_type: print
+
 
 
 
