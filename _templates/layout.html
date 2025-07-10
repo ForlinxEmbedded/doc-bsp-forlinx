@@ -1,0 +1,10 @@
+{% extends "!layout.html" %}
+
+{% block sidebarlogo %}
+  <div style="text-align: center; padding: 10px 12px;">
+    <a href="https://docs.forlinx.net/forlinx-online-docs/" title="返回首页">
+      <img src="{{ pathto('_static/forlinx_logo.png', 1) }}" alt="Forlinx Logo" style="height:48px; border-radius:6px; cursor:pointer; transition:opacity 0.3s ease;" 
+           onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1" />
+    </a>
+  </div>
+{% endblock %}
