@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. 1.1 OK3576开发板简介 &mdash; Forlinx Embedded Docs 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="canonical" href="./OK3576_intro.html" />
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=50421d65"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="1. 00 OK3576-C_Linux6.1.84_用户使用手册" href="OK3576-C_Linux.html" />
+    <link rel="prev" title="RK3576 Manuals" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Forlinx Embedded Docs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. 1.1 OK3576开发板简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#linux-6-1-84">2. 1.2 Linux 6.1.84系统软件资源介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#emmc">3. 1.3 eMMC存储器分区表</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="OK3576-C_Linux.html">1. 00 OK3576-C_Linux6.1.84_用户使用手册</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OK3576-C_Linux.html#id1">2. 免责声明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OK3576-C_Linux.html#id2">3. 概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OK3576-C_Linux.html#id3">4. 适用范围</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OK3576-C_Linux.html#id4">5. 更新记录</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OK3576-C_Linux.html#ok3576">6. 01_OK3576开发板介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OK3576-C_Linux.html#id6">7. 02_快速开机启动</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OK3576-C_Linux.html#id14">8. 03_OK3576平台界面功能使用及测试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OK3576-C_Linux.html#id40">9. 04_OK3576平台多媒体测试</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OK3576-C_Linux.html#id59">10. 05_烧写系统</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Forlinx Embedded Docs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">1. </span>1.1 OK3576开发板简介</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ok3576">
+<h1><span class="section-number">1. </span>1.1 OK3576开发板简介<a class="headerlink" href="#ok3576" title="Permalink to this heading"></a></h1>
+<p>RK3576是基于ARM64架构的低功耗高性能处理器，它包括4核Cortex-A53和4核Conrtex-A72以及独立的NEON协处理器和神经网络加上处理器NPU，可应用于计算机、手机、个人移动互联网，数字多媒体设备。</p>
+<p>飞凌OK3576-C开发平台核心板和底板采用接插件的连接方式。</p>
+<ul class="simple">
+<li><p><strong>请阅读：</strong></p></li>
+</ul>
+<p>本软件手册中不再对硬件参数进行叙述，在参考本手册进行软件开发前请阅读“OK3576-C _硬件手册”，以了解产品命名规则和您所使用产品的硬件配置信息，这样有助于您对本产品的使用。</p>
+</section>
+<section id="linux-6-1-84">
+<h1><span class="section-number">2. </span>1.2 Linux 6.1.84系统软件资源介绍<a class="headerlink" href="#linux-6-1-84" title="Permalink to this heading"></a></h1>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>设备</strong></p></th>
+<th class="head"><p><strong>驱动程序源代码在内核中的位置</strong></p></th>
+<th class="head"><p><strong>设备名</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>LCD 背光驱动</p></td>
+<td><p>drivers/video/backlight/pwm_bl.c</p></td>
+<td><p>/sys/class/backlight</p></td>
+</tr>
+<tr class="row-odd"><td><p>USB接口U盘</p></td>
+<td><p>drivers/usb/storage/</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>USB鼠标</p></td>
+<td><p>drivers/hid/usbhid/</p></td>
+<td><p>/dev/input/mice</p></td>
+</tr>
+<tr class="row-odd"><td><p>以太网</p></td>
+<td><p>drivers/net/ethernet/stmicro/stmmac</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>SD/micro TF卡驱动</p></td>
+<td><p>drivers/mmc/host/dw_mmc-rockchip.c</p></td>
+<td><p>/dev/block/mmcblk1pX</p></td>
+</tr>
+<tr class="row-odd"><td><p>EMMC驱动</p></td>
+<td><p>drivers/mmc/host/dw_mmc-rockchip.c</p></td>
+<td><p>/dev/block/mmcblk2pX</p></td>
+</tr>
+<tr class="row-even"><td><p>OV13850</p></td>
+<td><p>drivers/media/i2c/ov13855.c</p></td>
+<td><p>/dev/videoX</p></td>
+</tr>
+<tr class="row-odd"><td><p>LCD 控制器</p></td>
+<td><p>drivers/gpu/drm/rockchip/rockchip_drm_vop.c</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>MIPI CSI</p></td>
+<td><p>drivers/phy/rockchip/phy-rockchip-mipi-rx.c</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>MIPI DSI</p></td>
+<td><p>drivers/phy/rockchip/phy-rockchip-inno-mipi-dphy.c</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>LCD触摸驱动</p></td>
+<td><p>drivers/input/touchscreen/gt9xx/*   drivers/input/touchscreen/edt-ft5x06.c</p></td>
+<td><p>/dev/input/eventX</p></td>
+</tr>
+<tr class="row-odd"><td><p>RTC实时时钟驱动</p></td>
+<td><p>drivers/rtc/rtc-rx8010.c   drivers/rtc/rtc-pcf8563.c</p></td>
+<td><p>/dev/rtc0</p></td>
+</tr>
+<tr class="row-even"><td><p>串口</p></td>
+<td><p>drivers/tty/serial/8250/8250_dw.c</p></td>
+<td><p>/dev/ttySX</p></td>
+</tr>
+<tr class="row-odd"><td><p>按键驱动</p></td>
+<td><p>drivers/input/keyboard/adc-keys.c</p></td>
+<td><p>/dev/input/eventX</p></td>
+</tr>
+<tr class="row-even"><td><p>LED</p></td>
+<td><p>drivers/leds/leds-gpio.c</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>I2S</p></td>
+<td><p>sound/soc/rockchip/rockchip_i2s.c</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>音频驱动</p></td>
+<td><p>sound/soc/codecs/nau8822.c</p></td>
+<td><p>/dev/snd/</p></td>
+</tr>
+<tr class="row-odd"><td><p>PMIC</p></td>
+<td><p>drivers/mfd/rk806.c   drivers/regulator/rk860x-regulator.c</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>PCIE</p></td>
+<td><p>drivers/pci/controller/pcie-rockchip.c</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>看门狗</p></td>
+<td><p>drivers/watchdog/dw_wdt.c</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>SPI</p></td>
+<td><p>drivers/spi/spi-rockchip.c</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>PWM</p></td>
+<td><p>drivers/video/backlight/pwm_bl.c</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="emmc">
+<h1><span class="section-number">3. </span>1.3 eMMC存储器分区表<a class="headerlink" href="#emmc" title="Permalink to this heading"></a></h1>
+<p>下面表格是Linux操作系统的eMMC存储器分区信息（计算时一个块大小为512bit）：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>分区索引</strong></p></th>
+<th class="head"><p><strong>名称</strong></p></th>
+<th class="head"><p><strong>偏移/block</strong></p></th>
+<th class="head"><p><strong>大小/block</strong></p></th>
+<th class="head"><p><strong>内容</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>N/A</p></td>
+<td><p>security</p></td>
+<td><p>0x00000000</p></td>
+<td><p>0x00004000</p></td>
+<td><p>MiniLoaderAll.bin</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>uboot</p></td>
+<td><p>0x00004000</p></td>
+<td><p>0x00004000</p></td>
+<td><p>uboot.img</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>misc</p></td>
+<td><p>0x00006000</p></td>
+<td><p>0x00002000</p></td>
+<td><p>misc.img</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>boot</p></td>
+<td><p>0x00008000</p></td>
+<td><p>0x00020000</p></td>
+<td><p>boot.img</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>recovery</p></td>
+<td><p>0x00028000</p></td>
+<td><p>0x00040000</p></td>
+<td><p>recovery.img</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>backup</p></td>
+<td><p>0x00068000</p></td>
+<td><p>0x00010000</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>rootfs</p></td>
+<td><p>0x00078000</p></td>
+<td><p>0x01c00000</p></td>
+<td><p>rootfs.img</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>oem</p></td>
+<td><p>0x01c78000</p></td>
+<td><p>0x00040000</p></td>
+<td><p>oem.img</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>userdata</p></td>
+<td><p>0x01cb8000</p></td>
+<td><p>grow</p></td>
+<td><p>userdata.img</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="RK3576 Manuals" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="OK3576-C_Linux.html" class="btn btn-neutral float-right" title="1. 00 OK3576-C_Linux6.1.84_用户使用手册" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Forlinx Embedded.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
