@@ -1,0 +1,2420 @@
+﻿# 0 OK527-C_Forlinx Desktop22.04_用户使用手册
+
+版本：V1.0  
+发布日期：2024.12.20  
+文件密级：□绝密 □秘密 □内部资料 ■公开
+
+# 免责声明
+本手册版权归保定飞凌嵌入式技术有限公司所有。未经本公司的书面许可，任何单位和个人无权以任何形式复制、传播、转载本手册的任何部分，违者将被追究法律责任。
+
+保定飞凌嵌入式有限公司所提供的所有服务内容旨在协助用户加速产品的研发进度，在服务过程中所提供的任何程序、文档、测试结果、方案、支持等资料和信息，都仅供参考，用户有权不使用或自行参考修改，本公司不提供任何的完整性、可靠性等保证，若在用户使用过程中因任何原因造成的特别的、偶然的或间接的损失，本公司不承担任何责任。                  
+
+# 概述
+<font style="color:#333333;">本手册以使用户快速熟悉产品，了解接口功能和测试方法为目的，主要讲述了开发板接口功能的测试，烧写镜像方法，以及使用过程中出现的一些问题如何排查。在测试过程中，对一些命令进行了注释，方便</font>用户理解，以实用够用为主。涉及到内核编译、相关应用编译方法，开发环境搭建等请参考飞凌提供的《OK527-C_Ubuntu22.04_编译手册》
+
+  本手册一共分为5部分：
+
+第一部分产品的整体概述，简单介绍了开发板在接口资源以及内核源码中相关驱动路径等；
+
+第二部分产品的快速开机启动，可采用串口登录和网络登录两种方式；
+
+第三部分产品OK527平台Ubuntu界面功能使用及测试；
+
+第四部分产品OK527平台cmd命令使用及测试
+
+第五部分产品的烧写系统测试；
+
+ 本手册中一些符号及格式的相关说明：
+
+| **表现形式** | **含义** |
+| :---: | --- |
+| // | 对输入指令或输出信息的解释内容 |
+| 用户名@主机名 | root@OK527:~# ：开发板串口登录账户信息，   forlinx@ubuntu：开发环境ubuntu账户信息   用户可通过该信息确定功能操作的环境 |
+
+
+例：插入TF卡后，通过ls指令查看dev下的设备节点
+
+```plain
+root@OK527:~# ls /dev/
+block            loop2        stdout          tty38   ttyAS5        vcs1
+bsg              loop3        sunxi_soc_info  tty39   ttyUSB0       vcs2
+bus              loop4        tty             tty4    ttyUSB1       vcs3
+cedar_dev        loop5        tty0            tty40   ttyUSB2       vcs4
+char             loop6        tty1            tty41   ttyUSB3       vcs5
+console          loop7        tty10           tty42   urandom       vcs6
+cpu_dma_latency  media0       tty11           tty43   v4l           vcs7
+cuse             mem          tty12           tty44   v4l-subdev0   vcsa
+deinterlace      mmcblk0      tty13           tty45   v4l-subdev1   vcsa1
+disk             mmcblk0p1    tty14           tty46   v4l-subdev10  vcsa2
+dma_heap         mmcblk0p2    tty15           tty47   v4l-subdev11  vcsa3
+dri              mmcblk0p3    tty16           tty48   v4l-subdev12  vcsa4
+fb0              mmcblk0p4    tty17           tty49   v4l-subdev13  vcsa5
+fd               mmcblk0p5    tty18           tty5    v4l-subdev14  vcsa6
+
+...
+```
+
+
+
+# 适用范围
+本软件手册中适用于飞凌公司的OK527 平台Forlinx Desktop22.04操作系统。
+
+# 更新记录
+| **日期** | **手册版本** | **核心板版本** | **底板版本** | **更新内容** |
+| :---: | :---: | :---: | :---: | --- |
+| 20241220 | V1.0 | V1.1 | V1.1 | OK527-C Forlinx Desktop22.04用户使用手册初版。 |
+
+
+
+
+# 01_OK527开发板介绍
+
+## 1.1 OK527开发板简介
+OK527-C开发板采用[核心板](https://www.forlinx.com/)+底板的结构形式，基于全志T527处理器设计开发，处理器为ARM [Cortex](https://www.forlinx.com/CortexA9.html)-A55, 2Tops NPU, HiFi4 DSP, G57 MC1 GPU多核异构架构，处理器分为4个小核主频1.[4G](https://www.forlinx.com/article-new-c21/356.html)Hz和4个大核主频1.8GHz，核心板有四种规格，分别是4GB LPDDR4内存加32GB eMMC版本、2GB LPDDR4内存加16G eMMC版本、2GB LPDDR4内存加32G eMMC版本以及1GB LPDDR4内存加8G eMMC版本。OK527-C开发板功能接口资源丰富、提供多种外设接口，将核心板的如网卡、CPU内置音频Codec、GPADC、LRADC、TF Card、LVDS、HDM、DP、RGB、WIFI、4G、PCIE、MIPI-CSI等功能接口引出。
+
+飞凌OK527-C开发平台核心板和底板采用接插件的连接方式，主要接口如下图所示：
+
+![](https://cdn.nlark.com/yuque/0/2024/png/45383109/1718852560317-06c53e4a-05ac-401f-98df-a0199879ae61.png)
+
+
+
+&  **请阅读：**
+
+本软件手册中不再对硬件参数进行叙述，在参考本手册进行软件开发前请阅读“OK527-C 硬件手册”（下载方式同软件资料），以了解产品命名规则和您所使用产品的硬件配置信息，这样有助于您对本产品的使用。
+
+
+
+## 1.2 Linux 5.15.104系统软件资源介绍
+| **设备** | **驱动程序源代码在内核中的位置** | **设备名** |
+| --- | --- | --- |
+| 网卡驱动 | bsp/drivers/gmac/   bsp/drivers/stmmac | /sys/class/net/eth0   /sys/class/net/eth1 |
+| LCD 背光驱动 | drivers/video/backlight/ | /dev/disp |
+| LED 驱动 | drivers/leds/ | /sys/class/leds/ |
+| USB接口U盘 | drivers/usb/storage/ | /dev/sd* |
+| USB 4G | drivers/usb/serial/ | /dev/ttyUSB* |
+| USB Camera | drivers/media/usb/uvc/uvc_video.c | /dev/video* |
+| SD卡驱动 | bsp/drivers/mmc/ | /dev/block/mmcblk_p_ |
+| LCD FrameBuffer | bsp/drivers/video/sunxi/ | /dev/fb* |
+| 串口驱动 | bsp/drivers/uart/sunxi-uart.c | /dev/ttyAS* |
+| 看门狗驱动 | bsp/drivers/watchdog/ | /dev/watchdog |
+| WIFI | drivers/net/wireless/nxp/mlan/ | /sys/class/net/wlan0 |
+| 音频驱动 | bsp/drivers/sound/platform | /dev/snd/ |
+| SPI | bsp/drivers/spi/   drivers/spi/ | /dev/spidev*.* |
+| TWI驱动 | bsp/drivers/twi/ | /dev/i2c-* |
+| PWM驱动 | bsp/drivers/pwm/ | /dev/sunxi_pwm* |
+| GT911/GT928触摸驱动 | drivers/input/touchscreen/goodix.c | /dev/input/event* |
+| ft5x06触摸驱动 | drivers/input/touchscreen/edt-ft5x06.c | /dev/input/event* |
+| GPADC驱动 | bsp/drivers/gpadc/ | /dev/input/event* |
+| LRADC按键驱动 | bsp/drivers/lradc/ | /dev/input/event* |
+| RTC驱动 | drivers/rtc/rtc-rx8010.c   drivers/rtc/rtc-pcf8563.c | /dev/rtc0 |
+| IR驱动 | bsp/drivers/ir-rx/ | /dev/input/event* |
+| awlink驱动 | bsp/drivers/awlink/ | /sys/class/net/awlink* |
+
+
+## 1.3  eMMC存储器分区表
+下面表格是Forlinx Desktop22.04操作系统的eMMC存储器分区信息（计算时一个块大小为512bit）：
+
+
+
+| **分区索引** | **名称** | **大小/MB** | **文件系统** | **内容** |
+| --- | --- | --- | --- | --- |
+| mmcblk0p1 | boot-resource | 32MB | vfat | boot-resource.fex |
+| mmcblk0p2 | env | 16MB | raw | env.fex |
+| mmcblk0p3 | boot | 64MB | raw | boot.fex |
+| mmcblk0p4 | rootfs | 7.1G | ext4 | rootfs.fex |
+| mmcblk0p5 | userdata | 剩余全部 | ext4ext4 | 用户分区 |
+
+
+
+
+# 02_快速开机启动
+
+## 2.1 开机前的准备
+OK527开发板有串口登录和网络登录两种系统登录方式，系统开机前硬件准备：
+
++ 12V3A DC电源线
++ 调试串口线（串口登录使用）开发板上的调试串口USB Type-C口，用户可使用Type-A转Type-C线连接开发板和PC机，以查看开发板状态信息。
++ 网线（网络登录使用）
++ 屏幕，根据开发板接口连接屏幕（不需要显示的可以不接）
++ 检查启动方式（插着TF卡会优先从TF卡启动，否则从EMMC启动）
+
+![](https://cdn.nlark.com/yuque/0/2024/png/45383109/1718852722068-94815d92-2930-446c-9def-31b24a302afb.png)
+
+## 2.2  调试串口驱动安装
+OK527-C平台调试串口使用的是Type-C接口，板载USB转UART芯片，无需客户购买USB转串口调试工具，使用极其简单方便。  
+安装驱动请使用用户资料\工具\目录下提供的驱动包**DriverAssitant_v5.1.1.zip**进行装。  
+解压完成后直接运行**DriverInstall.exe**，为确保安装最新的驱动，请先点击驱动卸载，再驱动安装。
+
+## 2.3串口登录方式
+### 2.3.1 串口登录
+&  **说明：**
+
++ **串口设置：波特率115200、数据位8、停止位1、无校验位、无流控制。**
++ **串口终端登陆用户：串口终端自动登录root用户，无密码。**
++ **硬件需求：需要Type-C线连接PC和开发板**
++ **软件需求：PC端Windows系统需要安装超级终端软件，超级终端软件有多种，可自行使用自己熟悉的串口终端软件；**
+
+以下我们以putty终端软件为例介绍串口的登录方式：
+
+**步骤一：**使用串口线连接开发板和PC机，确认连接电脑的串口端口号，从“设备管理器”中查看串口端口号，以电脑实际识别的端口号为准。选择“USB-Enhanced-SERIAL-A CH342”
+
+![](https://cdn.nlark.com/yuque/0/2024/png/45383109/1718852752540-9e2cca09-69df-41fe-9a59-ca302f92aae7.png)
+
+
+
+**步骤二：**打开putty并设置，serial line根据使用的电脑COM口设置，波特率115200。
+
+![](https://cdn.nlark.com/yuque/0/2024/png/45383109/1718852766412-cf849bee-2bee-4277-9e11-bcba90fd3e14.png)
+
+
+
+**步骤三：**上述设置完成后可以在Saved Sessions输入电脑使用的COM口，下图以COM3为例，将设置保存，之后再打开串口时，直接点击保存的端口号即可。
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594310407-08be24c8-5b7e-4e92-9c6f-c3bda6564e95.png)
+
+### 2.3.2 串口登录
+PC端终端软件设置好后，通过串口线连接PC机和开发板，接好电源后开机上电。可以通过终端软件看到启动信息。
+
+启动信息如下表示启动成功，可以输入回车新建命令行：
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594310582-10a83aff-e3f5-46d0-8129-c3d4a056414e.png)
+
+## 2.4 屏幕切换
+OK527ubuntu目前支持HDMI、RGB、LVDS等多种屏幕接口。
+
+### 2.4.1 uboot菜单切换屏幕
+该方式在现有已支持屏幕的基础上不需要重新编译和烧写，即可切换屏幕。
+
+Uboot启动过程中，按空格键将会进入uboot菜单。
+
+```plain
+…
+
+---------------------------------------------
+0:Exit to console
+1:Reboot
+2:Display0 Type:lvds 1280x800
+3:Display1 Type:hdmi 1280x720P60
+4:Device PHY Type:none
+---------------------------------------------
+```
+
+菜单选项如下：
+
+输入0，将会进入uboot命令行；
+
+输入1，将会重启uboot；
+
+输入2，将会选择lvds显示；
+
+输入3，将会循环选择hdmi屏幕分辨率；
+
+输入4，将会循环选择pcie和usb3.0的复用。
+
+以切换至“lvds 1280x800”和“hdmi 1280x720P60”屏幕为例，在进入uboot菜单之后，按相应数字，直至显示如下内容时，按1重启即可。
+
+```plain
+---------------------------------------------
+0:Exit to console
+1:Reboot
+2:Display0 Type:lvds 1280x800
+3:Display1 Type:hdmi 1280x720P60
+4:Device PHY Type:none
+---------------------------------------------
+```
+
+
+
+## 2.5 系统关闭
+一般情况下直接关闭电源即可，如果有数据存储、功能使用等操作，操作过程中不要随意断电，以防出现文件不可逆损坏，只能重新烧写固件。未确保数据完全写入，可输入 sync 命令完成数据同步后再关闭电源。
+
+**注意**：用户依据核心板设计的产品，若在使用中存在意外掉电导致系统异常关闭的情景，可在设计中加入掉电保护等措施。
+
+
+
+# 03_OK527平台界面功能使用及测试
+
+## 3.1 主界面展示
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594312442-bdc6a477-7cff-4564-99d8-a3382fb26938.png)
+
+
+
+## 3.2浏览器测试
+选择applications -> internet->firefox
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594312530-3f4c12f6-75d9-435a-b8e4-b873bd3267b9.png)
+
+
+
+板子联网后打开百度测试，联网参照4.16.1中快捷配网
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594312601-ceb30240-9c58-49e3-8e22-485b3fbb6067.jpg)
+
+## 3.3虚拟键盘测试
+注意：开启此功能请关闭休眠，否则可能无法登录
+
+选择applications -> accessorie->onboard
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594312702-22707452-4459-4f89-ac4f-a59973b4f444.jpg)
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594312807-f7b598d3-ae68-4065-8762-7d2a806699ca.jpg)
+
+
+
+## 3.4 QT应用测试
+### 3.4.1 qt应用测试
+选择forlinx（密码forlinx）用户登录串口和桌面
+
+```plain
+OK527 login: forlinx
+Password: 
+[   23.693362] dma dma1chan0: The timeout func is not suportted or chan->private is NULL, timeout mode not used
+
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.147 aarch64)
+```
+
+
+
+forlinx@OK527:~$ ./fltest_qt_keypad
+
+
+
+观察屏幕是否启动了按键测试应用
+
+
+
+### 3.4.2 qt工程编译
+选择applications -> development->qt creator打开qt creator
+
+![](../image\wps4.jpg)
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594312918-f1c74fd4-c0fe-40fd-8f5b-5b32a50f2e32.jpg)
+
+
+
+选择qt上的tools->options，选择kit，点击右侧add，新增ok527，按下图配置后点击ok。
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594313017-9438dff6-3c70-4b84-8344-4980d8771842.jpg)
+
+
+
+选择qt上的file->open file or project
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594313108-9ce8018b-465b-4319-be26-1b81926f337d.jpg)
+
+
+
+选择/home/forlinx/keypad/keypad.pro打开
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594313201-759ac0ea-741e-4c19-8e52-537b2dca2028.jpg)
+
+
+
+选择kit为ok527点击configure project
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594313337-18296ae5-45c1-428e-826c-a592835b442c.jpg)
+
+
+
+
+
+编译工程，点击左下角run
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594313431-0b8dd6df-892f-4049-b611-7c462d242fe3.jpg)
+
+
+
+等待进行按键测试
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594313565-e3ea2240-2b14-4858-85dc-b74994ed1563.jpg)
+
+
+
+
+
+## 3.5 显示测试
+选择applications -> settings->display
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594313661-3070bf52-c0c6-4889-85d1-bdb51ee29ea6.jpg)
+
+
+
+可在此处配置双屏时主副屏和屏幕排列方式
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594313771-cfb16618-17bc-4726-b155-198dc4ef4f39.jpg)
+
+
+
+# 04_OK527平台cmd使用及测试
+
+## 4.1 系统信息查询
+查看内核信息，输入如下命令：
+
+```plain
+root@OK527:/# uname -a
+Linux OK527 5.15.147 #27 SMP PREEMPT Fri Nov 22 17:32:53 HKT 2024 aarch64 aarch64 aarch64 GNU/Linux
+```
+
+查看cpu信息：
+
+```plain
+root@OK527:/# cat /proc/cpuinfo
+processor       : 0
+BogoMIPS        : 48.00
+Features        : fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+processor       : 1
+BogoMIPS        : 48.00
+Features        : fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+processor       : 2
+BogoMIPS        : 48.00
+Features        : fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+processor       : 3
+BogoMIPS        : 48.00
+Features        : fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+processor       : 4
+BogoMIPS        : 48.00
+Features        : fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+processor       : 5
+BogoMIPS        : 48.00
+Features        : fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+processor       : 6
+BogoMIPS        : 48.00
+Features        : fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+processor       : 7
+BogoMIPS        : 48.00
+Features        : fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+```
+
+查看环境变量信息：
+
+```plain
+root@OK527:/# env
+SHELL=/bin/bash
+PWD=/root
+LOGNAME=root
+XDG_SESSION_TYPE=tty
+SYSTEMD_EXEC_PID=519
+MOTD_SHOWN=pam
+HOME=/root
+LANG=C.UTF-8
+LS_COLORS=
+INVOCATION_ID=baf6d0c0c07643ca87434e8c20725fa4
+LESSCLOSE=/usr/bin/lesspipe %s %s
+XDG_SESSION_CLASS=user
+TERM=vt220
+LESSOPEN=| /usr/bin/lesspipe %s
+USER=root
+SHLVL=1
+XDG_SESSION_ID=c2
+XDG_RUNTIME_DIR=/run/user/0
+DEBUGINFOD_URLS=
+JOURNAL_STREAM=7:8758
+HUSHLOGIN=FALSE
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/0/bus
+MAIL=/var/mail/root
+_=/usr/bin/env
+```
+
+
+
+## 4.2 调频测试
+**说明：T527一共有8个核，小核为cpu0~cpu3，大核为cpu4 ~ cpu7。此过程以cpu0为例操作，实际过程cpu0 ~ cpu3会同时改变。**
+
+1.当前内核中支持的所有cpufreq governor类型：
+
+```plain
+root@OK527:/# cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors
+conservative ondemand userspace powersave performance schedutil
+```
+
+其中userspace表示用户模式，在此模式下允许其他用户程序调节CPU频率。
+
+2.查看当前CPU支持的频率档位
+
+```plain
+root@OK527:/# cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies
+408000 672000 792000 936000 1008000 1104000 1224000 1320000 1416000
+```
+
+3.设置为用户模式，修改频率为936000：
+
+```plain
+root@OK527:/# echo userspace > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+root@OK527:/# echo 936000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed
+```
+
+查看修改后当前频率：
+
+```plain
+root@OK527:/# cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+936000
+```
+
+
+
+## 4.3 温度测试
+查看温度值：
+
+```plain
+root@OK527:/# cat /sys/class/thermal/thermal_zone0/temp
+51322
+```
+
+温度值即为51℃。
+
+## 4.4 DDR带宽测试
+以下测试结果由4+32G版本测得。
+
+```plain
+root@OK527:/# fltest_memory_bandwidth.sh
+L1 cache bandwidth rd test with # process
+0.008192 12361.88
+0.008192 12449.86
+0.008192 13783.93
+0.008192 12340.49
+0.008192 12254.37
+L2 cache bandwidth rd test
+0.131072 11583.94
+0.131072 11567.28
+0.131072 11575.68
+0.131072 11623.23
+0.131072 11633.31
+Main mem bandwidth rd test
+52.43 6094.25
+52.43 6115.57
+52.43 6085.05
+52.43 6068.85
+52.43 6111.30
+L1 cache bandwidth wr test with # process
+0.008192 24473.79
+0.008192 24422.20
+0.008192 19275.65
+0.008192 21933.80
+0.008192 24428.48
+L2 cache bandwidth wr test
+0.131072 12644.41
+0.131072 10001.18
+0.131072 12649.41
+0.131072 11240.93
+0.131072 12613.62
+Main mem bandwidth wr test
+52.43 1193.16
+52.43 1204.21
+52.43 1198.73
+52.43 1198.10
+52.43 1204.82
+L1 cache bandwidth rdwr test with # process
+0.008192 13312.77
+0.008192 13422.16
+0.008192 10639.39
+0.008192 13438.48
+0.008192 13268.48
+L2 cache bandwidth rdwr test
+0.131072 9320.89
+0.131072 9215.81
+0.131072 9277.19
+0.131072 9309.70
+0.131072 9324.90
+Main mem bandwidth rdwr test
+52.43 2143.45
+52.43 2101.27
+52.43 2106.50
+52.43 2102.70
+52.43 2102.79
+…
+
+root@OK527:/#
+```
+
+OK527-C的LPDDR4带宽如上所示，读带宽大约6094M/s，写带宽大约1193M/s。
+
+## 4.5 看门狗测试
+看门狗是嵌入式系统中经常用到的功能，OK527中看门狗的设备节点为/dev/watchdog。看门狗超时时间最大为16秒。  
+启动看门狗，设置复位时间10s，并定时喂狗，使用fltest_watchdog，此命令会打开看门狗并执行喂狗操作，因此系统不会重启
+
+```plain
+root@OK527:/# fltest_watchdog -t10 -c
+Watchdog Ticking Away!
+```
+
+使用ctrl+c结束测试程序时，停止喂狗，看门狗处于打开状态，10s后系统复位;  
+若不想复位，请在结束程序之后，10s以内输入关闭看门狗命令：
+
+```plain
+root@OK527:/# fltest_watchdog -d                                          //关闭看门狗
+```
+
+启动看门狗，设置复位时间10s，不喂狗  
+此命令会打开看门狗，但不执行喂狗操作，系统会在10s后重启.
+
+```plain
+root@OK527:/# fltest_watchdog -t 10
+```
+
+
+
+## 4.6 RTC功能测试
+**注意：确保板子上已经安装了纽扣电池，并且电池电压正常**
+
+RTC 测试，主要通过使用 date 和 hwclock 工具设置软、硬件时间，测试当板子断电再上电的时候，软件时钟读取 RTC 时钟是否同步。
+
+
+
+```plain
+root@OK527:/# date -s "2023-08-01 15:16:30"	             //设置软件时间
+Tue Aug  1 15:16:30 CST 2023
+root@OK527:/# hwclock -u -w			          //将软件时间同步到硬件时间
+root@OK527:/# hwclock -u -r			               //显示硬件时间
+Tue Aug  1 15:16:40 2023  0.000000 seconds
+```
+
+
+
+然后给板子断电再上电，进入系统后读取系统时间，可以看到时间已经同步。
+
+```plain
+root@OK527:/# date 
+Tue Aug  1 15:20:46 CST 2023
+```
+
+
+
+## 4.7 按键测试
+底板上有9个按键，其中侧边有6个按键，USER、VOL+、VOL-、MENU、ENTER、HOME的测试，键码分别为113、115、114、139、28、102，分别对应PCB丝印K9、K4、K5、K6、K7、K8；另外，丝印K1为FEL按键，用于烧录程序；K2为poweron按键，K3为reset按键。
+
+针对侧边5个按键的测试，执行如下命令：**user按键暂时无法测出**
+
+```plain
+root@OK527:/# fltest_keytest
+key115 Presse
+key115 Released
+key114 Presse
+key114 Released
+key139 Presse
+key139 Released
+key28 Presse
+key28 Released
+key102 Presse
+key102 Released
+```
+
+
+
+## 4.8 UART测试
+OK527-C开发板设置6个UART口，其中，在开发板上分别为:
+
+| **UART** | **设备节点** | **说明** |
+| --- | --- | --- |
+| UART0 | /dev/ttyAS0 | 调试串口，不能直接用于本测试 |
+| UART1 | /dev/ttyAS1 | 连接蓝牙，不能直接用于本测试 |
+| UART2 | /dev/ttyAS2 | TTL电平，和SPI复用，不能直接用于本测试 |
+| UART3 | /dev/ttyAS3 | TTL电平，和SPI复用，不能直接用于本测试 |
+| UART4 | /dev/ttyAS4 | RS485电平，可用于该测试 |
+| UART5 | /dev/ttyAS5 | RS485电平，可用于该测试 |
+
+
+当前版本sdk最大支持1.5Mbps。
+
+本次测试采用UART4测试，分别UART4的A B，到usb转485上来进行串口测试。
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594315260-4902c37b-f003-4103-9675-701cb8bab85b.png)
+
+在开发板串口中输入如下命令：
+
+```plain
+root@OK527:/# fltest_uarttest -d /dev/ttyAS4 -b 115200 -r &
+[1] 1953
+root@OK527:/# fltest_uarttest -d /dev/ttyAS5 -b 115200 -w
+tx_0: Gpi2GoMkYywl2IE9sEBcG6yI0DpmDbFT
+rx_0: Gpi2GoMkYywl2IE9sEBcG6yI0DpmDbFT
+[1]+  Done                    fltest_uarttest -d /dev/ttyAS4 -b 115200 -r
+root@OK527:/#
+```
+
+## 4.9 USB转四串口测试
+**说明：**  
+**支持XR21V1414USB转串口芯片驱动**  
+**USB转四串口为选配模块，如若有需求，请联系飞凌嵌入式销售人员。**  
+1、开发板上电启动后，通过USB HOST接口连接USB转四串口模块2、通过lsusb查看usb设备状态：
+
+```plain
+root@OK527:/# lsusb
+Bus 001 Device 001: ID 1d6b:0002
+Bus 001 Device 002: ID 1a40:0101
+Bus 002 Device 001: ID 1d6b:0001
+Bus 001 Device 003: ID 04e2:1414                             //该转换芯片的vid和pid
+```
+
+查看dev下是否生产节点：
+
+```plain
+root@OK527:/# ls /dev/ttyXRUSB*
+/dev/ttyXRUSB0  /dev/ttyXRUSB1  /dev/ttyXRUSB2  /dev/ttyXRUSB3 
+```
+
+查看dev下是否生产节点：  
+root@OK527:/# ls /dev/ttyXRUSB*  
+/dev/ttyXRUSB0  /dev/ttyXRUSB1  /dev/ttyXRUSB2  /dev/ttyXRUSB3 
+
+2、测试方法参考“UART测试”。
+
+## 4.10 GPADC测试
+开发板引出了GPADC的14个通道，电压采样范围0~1.8V，测试可调电阻数值之前需要短接P14端子，通过P14端子选择GPADC的哪个通道接入R67电位器：
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594315336-85b5c1ee-1f1e-4f91-aee5-76b665583cb9.jpg)
+
+
+
+各个通道的对应情况如下
+
+| 原理图标号 | event编号 | soc内编号 |
+| --- | --- | --- |
+| GPADC3 | /dev/input/event2 | gpadc0_channel3 |
+| GPADC4 | /dev/input/event3 | gpadc0_channel4 |
+| GPADC5 | /dev/input/event4 | gpadc0_channel5 |
+| GPADC6 | /dev/input/event5 | gpadc0_channel6 |
+| GPADC7 | /dev/input/event6 | gpadc0_channel7 |
+| GPADC12 | /dev/input/event7 | gpadc1_channel0 |
+| GPADC13 | /dev/input/event8 | gpadc1_channel1 |
+| GPADC14 | /dev/input/event9 | gpadc1_channel2 |
+| GPADC15 | /dev/input/event10 | gpadc1_channel3 |
+| GPADC16 | /dev/input/event11 | gpadc1_channel4 |
+| GPADC17 | /dev/input/event12 | gpadc1_channel5 |
+| GPADC18 | /dev/input/event13 | gpadc1_channel6 |
+| GPADC19 | /dev/input/event14 | gpadc1_channel7 |
+| GPADC20 | /dev/input/event15 | gpadc1_channel8 |
+
+
+运行fltest_adc，输入3，读取/dev/input/event3事件，对应GPADC0的channel4，对应原理图GPADC4
+
+```plain
+root@OK527:/# fltest_adc
+Available devices:
+/dev/input/event2:      sunxi-gpadc0/channel3/input0
+/dev/input/event3:      sunxi-gpadc0/channel4/input0
+/dev/input/event4:      sunxi-gpadc0/channel5/input0
+/dev/input/event5:      sunxi-gpadc0/channel6/input0
+/dev/input/event6:      sunxi-gpadc0/channel7/input0
+/dev/input/event7:      sunxi-gpadc1/channel0/input0
+/dev/input/event8:      sunxi-gpadc1/channel1/input0
+/dev/input/event9:      sunxi-gpadc1/channel2/input0
+/dev/input/event10:     sunxi-gpadc1/channel3/input0
+/dev/input/event11:     sunxi-gpadc1/channel4/input0
+/dev/input/event12:     sunxi-gpadc1/channel5/input0
+/dev/input/event13:     sunxi-gpadc1/channel6/input0
+/dev/input/event14:     sunxi-gpadc1/channel7/input0
+/dev/input/event15:     sunxi-gpadc1/channel8/input0
+Select the device event number: 3
+sunxi-gpadc0/channel4/input0
+[  919.877925] sunxi-gpadc 2009000.gpadc0: Enable channel 4 value 848
+value 846
+value 848
+value 849
+value 849
+```
+
+## 4.11 TF卡测试
+**说明：**  
+**SD卡挂载目录为/media/forlinx/，支持热插拔，终端会打印关于SD卡的信息。**  
+**不支持NTFS格式的文件系统，若不清楚TF卡格式，建议使用前将其格式化为FAT32格式。**  
+**eMMC版本插入tf卡之后设备节点为“/dev/mmcblk1”**  
+**以下测试命令以eMMC版本为例**
+
+1、查看设备节点
+
+```plain
+root@OK527:/# ls /dev/mmcblk*
+mmcblk0      mmcblk0p1    mmcblk0p2    mmcblk0p3    mmcblk0p4    mmcblk0p5    mmcblk0rpmb  mmcblk1      mmcblk1p1
+```
+
+2、挂载设备
+
+```plain
+root@OK527:/# mkdir /media/forlinx/mmcblk1p1						//创建挂载目录
+root@OK527:/# mount /dev/mmcblk1p1 /media/forlinx/mmcblk1p1			//挂载设备
+root@OK527:/# ls /media/forlinx/mmcblk1p1/
+'System Volume Information'
+```
+
+2、写入测试：
+
+```plain
+root@OK527:/# dd if=/dev/zero of=/media/forlinx/mmcblk1p1/test bs=1M count=500 conv=fsync
+500+0 records in
+500+0 records out
+524288000 bytes (524 MB, 500 MiB) copied, 10.6269 s, 49.3 MB/s
+```
+
+4、读取测试：  
+注意：为确保数据准确，请重启开发板后测试读取速度。
+
+```plain
+root@OK527:/# dd if=/dev/mmcblk1p1 of=/dev/null bs=1M count=500 iflag=direct
+500+0 records in
+500+0 records out
+524288000 bytes (524 MB, 500 MiB) copied, 7.56327 s, 69.3 MB/s
+```
+
+5、TF卡使用完成后，在弹出TF卡前，需要使用umount卸载TF。
+
+```plain
+root@OK527:/# umount /media/forlinx/mmcblk1p1
+```
+
+**注意：退出TF卡挂载路径后再插拔TF卡。**
+
+## 4.12 存储测试
+OK527平台eMMC默认运行于HS400模式，下面简单测试eMMC的读写速度，以读写ext4文件系统为例。
+
+挂载
+
+```plain
+root@OK527:/# mkdir /media/forlinx/mmcblk0p4					//创建挂载目录
+root@OK527:/# mount /dev/mmcblk0p4 /media/forlinx/mmcblk0p4 	//挂载设备
+```
+
+写入测试：
+
+```plain
+root@OK527:/# dd if=/dev/zero of=/media/forlinx/mmcblk0p4/data.img bs=1M count=500 conv=fsync
+500+0 records in
+500+0 records out
+524288000 bytes (524 MB, 500 MiB) copied, 4.39941 s, 119 MB/s
+```
+
+	读取测试：
+
+**注意：为确保数据准确，请重启开发板后测试读取速度。**
+
+```plain
+root@OK527:/# dd if=/media/forlinx/mmcblk0p4/data.img of=/dev/null bs=1M count=500 iflag=direct
+500+0 records in
+500+0 records out
+524288000 bytes (524 MB, 500 MiB) copied, 2.16065 s, 243 MB/s
+```
+
+## 4.13 USB鼠标测试
+**说明：**  
+**支持USB鼠标、USB键盘的热插拔。**  
+此时在屏幕上出现箭头光标，鼠标已可正常使用。  
+当拔掉usb鼠标时，此时屏幕上箭头光标消失，鼠标已成功去除。
+
+## 4.14 USB 2.0
+**说明：**  
+**支持U盘设备的热插拔。**  
+**不支持NTFS格式的文件系统，若不清楚U盘格式，建议使用前将其格式化为FAT32格式。**  
+**注意区分USB3.0和USB2.0接口**  
+OK527支持三个USB2.0接口，用户可以在任何一个板载USB HOST接口上连接USB鼠标、USB键盘、U盘等设备，并支持以上设备的热插拔。这里用挂载U盘为例进行演示。  
+终端会打印关于U盘的信息，由于存在很多种U盘，显示的信息可能会有差别：
+
+1、开发板启动后，连接USB接口u盘到开发板的USB host接口。
+
+2、查看设备：
+
+```plain
+root@OK527:/# ls /dev/sd*
+/dev/sda  /dev/sda1
+```
+
+sda1为第一个插入的USB存储设备的第一个分区，依次类推
+
+3、挂载并查看U盘内容：
+
+```plain
+root@OK527:/# mkdir -p /media/forlinx/sda   						//创建挂载目录
+root@OK527:/# mount /dev/sda1 /media/forlinx/sda/					//挂载设备
+root@OK527:/# ls /media/forlinx/sda/
+ 10-29buildroot                                                         Music
+ 1028run.log                                                            Notifications
+'1028'$'\345\256\236\351\252\214\350\256\260\345\275\225''.xlsx'        Pictures
+```
+
+4、写入测试，写入速度受限于具体的存储设备：
+
+```plain
+root@OK527:/# dd if=/dev/zero of=/media/forlinx/sda//test bs=1M count=500 conv=fsync
+500+0 records in
+500+0 records out
+524288000 bytes (524 MB, 500 MiB) copied, 58.7372 s, 8.9 MB/s
+```
+
+5、读取测试：  
+**注意：为确保数据准确，请重启开发板后测试读取速度。**
+
+```plain
+root@OK527:/# dd if=/media/forlinx/sda/test of=/dev/null bs=1M count=500 iflag=direct
+500+0 records in
+500+0 records out
+524288000 bytes (524 MB, 500 MiB) copied, 18.4939 s, 28.3 MB/s
+```
+
+6、U盘使用完成后，在拔出U盘前，需要使用umount卸载：
+
+```plain
+root@OK527:/# umount /media/forlinx/sda/							//卸载设备
+```
+
+**注意：退出挂载路径后再拔U盘。**
+
+## 4.15 OTG测试
+	OK527-C 包含一个OTG接口，Device模式可以用它来进行刷机，ADB文件传输、调试，Host模式可以插入普通的USB设备。当使用Type-C转接线连接OK527-C至PC时，OK527-C将自动配置OTG为Device 模式，同样，使用OTG线插入U盘等设备时，系统会自动将OTG配置为Host模式。  
+**测试方法参照4.14USB2.0**
+
+## 4.16 以太网配置
+OK527-C板载2个千兆网卡，插入网线连接网络的情况下，出厂时默认配置eth0为静态IP 192.168.0.232。OK527-C的网卡可通过配置文件/etc/network/interfaces进行配置。
+
+### 4.16.1千兆以太网固定IP方式
+& **说明内核中千兆以太网卡为eth0，默认ip为192.168.0.232**
+
+开发板上电，正常启动后，执行如下命令，打开网络配置文件/etc/network/interfaces
+
+```plain
+root@OK527:/# vi /etc/network/interfaces
+```
+
+内容如下（软件版本更新完成后可能会有细微差别，用户以实际信息为准）：
+
+iface：用于指定需要固定IP的网卡；
+
+address：用于指定需要固定的IP地址
+
+netmask：用于设置子网掩码；
+
+gateway：用于指定网关
+
+
+
+```plain
+root@OK527:/# cat /etc/network/interfaces# 
+interface file auto-generated by buildroot 
+auto lo
+iface lo inet loopback 
+auto eth0
+iface eth0 inet static
+address 192.168.0.232
+netmask 255.255.255.0
+gateway 192.168.0.1 
+
+```
+
+用户依据实际情况设置后，保存退出后，使用sync进行同步，重启开发板或者执行ip addr flush dev eth0清除网卡ip后，使用ifdown -a和ifup -a指令重新启停配置，配置文件才能生效。
+
+以下为快捷配网设置
+
+```plain
+ root@OK527:~# ifconfig eth0 192.168.0.232
+ root@OK527:~# route add default gw 192.168.0.1
+ root@OK527:~# echo "nameserver 8.8.8.8" > /etc/resolv.conf 
+```
+
+
+
+### 4.16.2测试以太网网速
+& **说明：**
+
+**l** **测试开发板与电脑的通信速度，保证电脑和开发板可以正常通信**
+
+**l 本次测试默认windows已安装iperf3工具(02-用户资料\01-软件资料\04-工具iperf-3.1.3-win64.zip）**
+
+通过使用网络速度测试工具iperf3，测试OK527-C底板eth0网络速度。
+
+	在Windows的cmd命令终端运行iperf3服务器模式下运行：
+
+```plain
+D:\iperf-3.1.3-win64\iperf-3.1.3-win64>iperf3.exe -s
+```
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594315422-47f7cde7-ba8b-4e81-9a60-2a8ead6c0d37.jpg)
+
+
+
+开发板eth0的ip为192.168.1.11，windows电脑IP为192.168.1.39，在OK527 串口调试终端输入
+
+```plain
+root@OK527:/# iperf3 -c 192.168.1.39            //测试上传带宽
+Connecting to host 192.168.1.39, port 5201
+[  5] local 192.168.1.11 port 55152 connected to 192.168.1.39 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   111 MBytes   929 Mbits/sec    0    215 KBytes
+[  5]   1.00-2.00   sec   109 MBytes   913 Mbits/sec    0    215 KBytes
+[  5]   2.00-3.00   sec   113 MBytes   949 Mbits/sec    0    215 KBytes
+[  5]   3.00-4.00   sec   110 MBytes   920 Mbits/sec    0    215 KBytes
+[  5]   4.00-5.00   sec   113 MBytes   949 Mbits/sec    0    215 KBytes
+[  5]   5.00-6.00   sec   113 MBytes   951 Mbits/sec    0    215 KBytes
+[  5]   6.00-7.00   sec   113 MBytes   949 Mbits/sec    0    215 KBytes
+[  5]   7.00-8.00   sec   113 MBytes   950 Mbits/sec    0    215 KBytes
+[  5]   8.00-9.00   sec   113 MBytes   946 Mbits/sec    0    215 KBytes
+[  5]   9.00-10.00  sec   114 MBytes   952 Mbits/sec    0    215 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.10 GBytes   941 Mbits/sec    0             sender
+[  5]   0.00-10.00  sec  1.09 GBytes   940 Mbits/sec                  receiver
+
+iperf Done.
+root@OK527:/# iperf3 -c 192.168.1.39 -R            //测试下载带宽
+Connecting to host 192.168.1.39, port 5201
+Reverse mode, remote host 192.168.1.39 is sending
+[  5] local 192.168.1.11 port 40676 connected to 192.168.1.39 port 5201
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec  99.0 MBytes   830 Mbits/sec
+[  5]   1.00-2.00   sec   102 MBytes   857 Mbits/sec
+[  5]   2.00-3.00   sec   103 MBytes   864 Mbits/sec
+[  5]   3.00-4.00   sec   104 MBytes   868 Mbits/sec
+[  5]   4.00-5.00   sec   103 MBytes   863 Mbits/sec
+[  5]   5.00-6.00   sec   104 MBytes   872 Mbits/sec
+[  5]   6.00-7.00   sec   102 MBytes   854 Mbits/sec
+[  5]   7.00-8.00   sec   100 MBytes   840 Mbits/sec
+[  5]   8.00-9.00   sec   103 MBytes   866 Mbits/sec
+[  5]   9.00-10.00  sec   101 MBytes   851 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.00  sec  1021 MBytes   857 Mbits/sec                  sender
+[  5]   0.00-10.00  sec  1021 MBytes   857 Mbits/sec                  receiver
+
+iperf Done.
+root@OK527:/#
+```
+
+OK527-C 千兆网络带宽为:
+
+eth0下载857Mbps，上传940Mbps
+
+eth1下载940Mbps，上传940Mbps
+
+## 4.17 网络服务
+**说明：**  
+**默认eth0的ip为192.168.0.232**
+
+### 4.17.1 SFTP
+1 安装包路径：02-用户资料\01-软件资料\04-工具\FileZilla*
+
+OK527-C开发板支持 SFTP 服务，系统启动时已自动开启。设置好 IP 地址后就可以作为一台 SFTP 服务器。下面介绍如何利用SFTP工具进行文件传输。
+
+		在 windows上安装好filezilla工具，并按照下图所示步骤进行设置。
+
+  打开filezilla工具，点击文件，选择站点管理器（site Manager)。
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594315529-ffe66f21-d255-4375-a2b4-208e1fdf5286.jpg)
+
+
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594315617-850176a6-7739-4802-af19-2286bf0e7f35.jpg)
+
+
+
+登录成功后便可以进行上传下载操作。
+
+## 4.18 WIFI 测试
+### 4.18.1 STA模式
+**说明：**  
+**由于网络环境的不同，所以在您做本实验时，请根据实际情况进行设置。**  
+**开发板支持连接2.4G、5G无线热点**  
+该模式即作为一个站点，连接到无线网络中。以下测试中，路由器采用wpa加密方式，连接的wifi为2.4GHz，热点名称为：H3C_708，密码为：123456785. 。由于网络环境的不同，用户在进行本次测试时，请根据实际情况进行设置：  
+1、开发板终端中输入如下命令：  
+命令中相关参数含义如下：
+
+| **参数** | **含义** |
+| --- | --- |
+| -i | 无线网卡节点名 |
+| -s | 连接的实际wifi热点名称。 |
+| -p | 后接参数Password指要连接的实际wifi热点的密码；如果当前热点没有密码，-p后参数写NONE。 |
+
+
+串口打印如下：
+
+```plain
+root@OK527:/# fltest_cm358.sh start
+root@OK527:/# fltest_wifi.sh -i wlan0 -s H3C_708 -p 123456785.
+[  204.803506] sunxi-gmac 4500000.gmac0 eth0: Link is Down
+wifi wlan0
+ssid H3C_708
+pasw 123456785.
+waiting...
+[  211.388935] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+udhcpc: started, v1.35.0
+udhcpc: broadcasting discover
+udhcpc: broadcasting discover
+udhcpc: broadcasting select for 192.168.1.20, server 192.168.1.1
+udhcpc: lease of 192.168.1.20 obtained from 192.168.1.1, lease time 86400
+deleting routers
+adding dns 192.168.1.1
+connect ok
+```
+
+2、检查是否能ping外网，在终端中输入如下命令
+
+```plain
+root@OK527:/# ping -I wlan0 baidu.com -c 4            //指定wlan0网卡ping4次
+PING baidu.com (110.242.68.66): 56 data bytes
+64 bytes from 110.242.68.66: seq=0 ttl=54 time=95.213 ms
+64 bytes from 110.242.68.66: seq=1 ttl=54 time=119.289 ms
+64 bytes from 110.242.68.66: seq=2 ttl=54 time=40.234 ms
+64 bytes from 110.242.68.66: seq=3 ttl=54 time=64.454 ms
+
+--- baidu.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 40.234/79.797/119.289 ms
+```
+
+
+
+## 4.19 4G测试
+**说明：**  
+**驱动支持移远EC20的4G模组。**  
+**OK527支持4G模块，开发板启动前接入4G模块，安装4G天线，插入SIM卡，启动开发板，对EC20进行拨号上网操作。**
+
+### 4.19.1 EC20模块测试
+**说明：**  
+**使用物联网卡测试时，需确认模组固件版本，低版本固件不支持，需升级EC20固件。**  
+**有些物联网卡拨号时需要设置专用账号和密码，用户需根据实际情况调整指令。**  
+**可使用quectelCM --help指令查看相关参数含义。**  
+1、连接好模块，开发板和模块上电后，可通过lsusb指令查看USB状态。
+
+```plain
+root@OK527:/# lsusb
+Bus 001 Device 001: ID 1d6b:0002
+Bus 001 Device 002: ID 1a40:0101
+Bus 002 Device 001: ID 1d6b:0001
+Bus 001 Device 003: ID 2c7c:0125        //EC20
+```
+
+/dev下查看设备节点状态
+
+```plain
+root@OK527:/# ls /dev/ttyUSB*
+/dev/ttyUSB0  /dev/ttyUSB1  /dev/ttyUSB2  /dev/ttyUSB3
+```
+
+2、设备识别成功后，可进行拨号上网测试
+
+```plain
+root@OK527:/# fltest_quectel.sh &
+```
+
+打印信息如下：
+
+```plain
+[01-01_08:01:47:702] Quectel_QConnectManager_Linux_V1.6.0.15
+[01-01_08:01:47:702] Find /sys/bus/usb/devices/1-1.4 idVendor=0x2c7c idProduct=0x125, bus=0x001, dev=0x003
+[01-01_08:01:47:703] Auto find qmichannel = /dev/qcqmi0
+[01-01_08:01:47:703] Auto find usbnet_adapter = usb0
+[01-01_08:01:47:703] netcard driver = GobiNet, driver version = V1.6.2.14
+[01-01_08:01:47:703] ioctl(0x89f3, qmap_settings) failed: Operation not supported, rc=-1
+[01-01_08:01:47:703] Modem works in QMI mode
+[01-01_08:01:47:716] Get clientWDS = 7
+[01-01_08:01:47:748] Get clientDMS = 8
+[01-01_08:01:47:780] Get clientNAS = 9
+[01-01_08:01:47:812] Get clientUIM = 10
+[01-01_08:01:47:845] Get clientWDA = 11
+[01-01_08:01:47:876] requestBaseBandVersion EC20CEHDLGR06A07M1G
+[01-01_08:01:48:005] requestGetSIMStatus SIMStatus: SIM_READY
+[01-01_08:01:48:036] requestGetProfile[1] 3gnet///0
+[01-01_08:01:48:068] requestRegistrationState2 MCC: 460, MNC: 1, PS: Attached, DataCap: LTE
+[01-01_08:01:48:100] requestQueryDataCall IPv4ConnectionStatus: [  108.199773] IPv6: ADDRCONF(NETDEV_CHANGE): usb0: link becomes ready
+DISCONNECTED
+[01-01_08:01:48:100] ifconfig usb0 0.0.0.0
+[01-01_08:01:48:113] ifconfig usb0 down
+[01-01_08:01:48:165] requestSetupDataCall WdsConnectionIPv4Handle: 0x871ecdf0
+[01-01_08:01:48:326] ifconfig usb0 up
+[01-01_08:01:48:331] udhcpc -f -n -q -t 5 -i usb0
+udhcpc: started, v1.35.0
+udhcpc: broadcasting discover
+udhcpc: broadcasting select for 10.112.182.237, server 10.112.182.238
+udhcpc: lease of 10.112.182.237 obtained from 10.112.182.238, lease time 7200
+[01-01_08:01:48:491] deleting routers
+[01-01_08:01:48:509] adding dns 123.123.123.123
+[01-01_08:01:48:509] adding dns 123.123.123.124
+```
+
+能自动分配ip并添加DNS，则EC20拨号成功。
+
+3、拨号成功后，通过ifconfig查看网络节点为usb0（节点名可能不同，以实际情况为准），通过ping命令测试网络状态：
+
+```plain
+root@OK527:/# ping -I enx0250f4000000 www.baidu.com -c4
+PING baidu.com (110.242.68.66): 56 data bytes
+64 bytes from 110.242.68.66: seq=0 ttl=53 time=59.096 ms
+64 bytes from 110.242.68.66: seq=1 ttl=53 time=69.325 ms
+64 bytes from 110.242.68.66: seq=2 ttl=53 time=69.955 ms
+64 bytes from 110.242.68.66: seq=3 ttl=53 time=83.063 ms
+
+--- baidu.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 59.096/70.359/83.063 ms
+```
+
+如果出现无法ping通，可尝试关闭wlan0节点后重新ping
+
+```plain
+ifconfig wlan0 down
+```
+
+
+
+## 4.20 放/录音测试
+**说明：**  
+OK527提供1个3.5mm音频插口和2个XH-2.54-2PS扬声器接口，底板mic和耳机mic可以录音  
+放音测试：
+
+```plain
+root@OK527:/# aplay /media/audio/30s.wav
+```
+
+不插耳机时由扬声器输出，插入耳机之后扬声器静音，由耳机输出  
+HDMI音频测试
+
+```plain
+root@OK527:/# aplay -l
+**** List of PLAYBACK Hardware Devices ****
+card 0: audiocodec [audiocodec], device 0: sunxi-snd-plat-aaudio-sunxi-snd-codec 7110000.codec-0 []
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+card 1: sndhdmi [sndhdmi], device 0: sunxi-snd-plat-i2s-soc@3000000:hdmi_codec soc@3000000:hdmi_code []
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+```
+
+注意：需要在UBOOT菜单上配置HDMI显示。 
+
+录音测试：
+
+```plain
+root@OK527:/# arecord -c2 -r 48000 -f S16_LE -d 3 mic.wav
+Recording WAVE 'mic.wav' : [ 4608.610608] [SNDCODEC][sunxi_card_hw_params][630]:stream_flag: 1
+Signed 16 bit Little Endian, Rate 48000 Hz, Stereo
+```
+
+录音会采集底板mic和耳机mic，分别作为录音的左右声道。
+
+## **4.21 添加开机自启动脚本**
+### 4.21.1 临时添加自启动脚本
+1、先打开一个服务：
+
+```plain
+root@OK527:/# vi /lib/systemd/system/rc-local.service
+```
+
+在最下方增加：
+
+```plain
+[Install]
+WantedBy=multi-user.target
+Alias=rc-local.service
+```
+
+2、新建/etc/rc.local文件
+
+```plain
+root@OK527:/# vi /etc/rc.local
+```
+
+在文件中写入自启脚本
+
+```plain
+#!/bin/bash
+echo “ok527 start”
+exit
+```
+
+3、给予执行权限
+
+```plain
+root@OK527:/# chmod a+x /etc/rc.local
+```
+
+4、设置开机自动运行
+
+```plain
+root@OK527:/# systemctl enable rc-local.service
+Created symlink /etc/systemd/system/rc-local.service → /lib/systemd/system/rc-local.service.
+Created symlink /etc/systemd/system/multi-user.target.wants/rc-local.service → /lib/systemd/system/rc-local.service.
+```
+
+## 4.22 LED测试
+	OK527-C核心板有一个可控红色LED灯，板卡上电启动时该红色LED灯闪烁。  
+测试方法如下：  
+1、查看触发条件
+
+```plain
+root@OK527:/# cat /sys/class/leds/heartbeat/trigger
+none rc-feedback rfkill-any rfkill-none kbd-scrolllock kbd-numlock kbd-capslock kbd-kanalock kbd-shiftlock kbd-altgrlock kbd-ctrllock kbd-altlock kbd-shiftllock kbd-shiftrlock kbd-ctrlllock kbd-ctrlrlock mmc0 mmc1 [heartbeat] rfkill0
+```
+
+其中[heartbeat]表示当前的触发条件为系统心跳灯，往trigger中写上述字符串，可以修改触发条件。  
+2、用户控制  
+当led触发条件设置为none时，用户可通过命令来控制led灯的亮灭
+
+```plain
+root@OK527:/# echo none > /sys/class/leds/heartbeat/trigger
+root@OK527:/# echo 1 > /sys/class/leds/heartbeat/brightness
+root@OK527:/# echo 0 > /sys/class/leds/heartbeat/brightness
+```
+
+3、将红色LED灯更改为心跳灯
+
+```plain
+root@OK527:/# echo heartbeat > /sys/class/leds/heartbeat/trigger
+```
+
+	此时LED有系统时钟控制，按一定节奏闪烁。
+
+## 4.23 A55 CoreMark测试
+在嵌入式处理器领域最为知名和常见的 Benchmarks 为 Dhrystone 和 CoreMark，CoreMark 是一个综合基准，用于测量嵌入式系统中使用的中央处理器(CPU)的性能。它是在 2009 由 eembc 的 shay gal-on 开发的，旨在成为一个行业标准，取代过时的 dehrystone 基准。  
+OK527-C 平台默认已经移植好了 CoreMark 测试程序，您可以使用以下命令进行测试：  
+1、分别将CPU小核、大核设置为高性能模式
+
+```plain
+root@OK527:/# echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+root@OK527:/# echo performance > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+```
+
+2、CoreMark测试
+
+```plain
+root@OK527:/# coremark
+2K performance run parameters for coremark.
+CoreMark Size    : 666
+Total ticks      : 16379
+Total time (secs): 16.379000
+Iterations/Sec   : 6715.916723
+Iterations       : 110000
+Compiler version : GCC10.3.1 20210621
+Compiler flags   : -O2   -lrt
+Memory location  : Please put data memory location here
+                        (e.g. code in flash, data on heap etc)
+seedcrc          : 0xe9f5
+[0]crclist       : 0xe714
+[0]crcmatrix     : 0x1fd7
+[0]crcstate      : 0x8e3a
+[0]crcfinal      : 0x33ff
+Correct operation validated. See readme.txt for run and reporting rules.
+CoreMark 1.0 : 6715.916723 / GCC10.3.1 20210621 -O2   -lrt / Heap
+root@OK527:/#
+```
+
+## 4.24 A55 Dhrystone测试
+Dhrystone 是于 1984 年由 Reinhold P. Weicker 设计的一套综合的基准程序，该程序用来测试 CPU（整数）计算性能。Dhrystone 并不包括浮点运算，其输出结果为每秒钟运行 Dhrystone 的次数，即每秒钟迭代主循环的次数。  
+OK527-C 平台已经移植好了 Dhrystone 测试程序，您可以使用以下命令进行测试。  
+1、将 CPU 设置为高性能模式
+
+```plain
+root@OK527:/# echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+root@OK527:/# echo performance > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+```
+
+2、dhrystone测试
+
+```plain
+root@ OK527:/# echo 50000000 | dhrystone        //运行50000000次Dhrystone测试
+
+Dhrystone Benchmark, Version 2.1 (Language: C)
+
+Program compiled without 'register' attribute
+
+Please give the number of runs through the benchmark:
+Execution starts, 50000000 runs through Dhrystone
+Execution ends
+
+Final values of the variables used in the benchmark:
+
+Int_Glob:            5
+        should be:   5
+Bool_Glob:           1
+        should be:   1
+Ch_1_Glob:           A
+        should be:   A
+Ch_2_Glob:           B
+        should be:   B
+Arr_1_Glob[8]:       7
+        should be:   7
+Arr_2_Glob[8][7]:    50000010
+        should be:   Number_Of_Runs + 10
+Ptr_Glob->
+  Ptr_Comp:          -1692515680
+        should be:   (implementation-dependent)
+  Discr:             0
+        should be:   0
+  Enum_Comp:         2
+        should be:   2
+  Int_Comp:          17
+        should be:   17
+  Str_Comp:          DHRYSTONE PROGRAM, SOME STRING
+        should be:   DHRYSTONE PROGRAM, SOME STRING
+Next_Ptr_Glob->
+  Ptr_Comp:          -1692515680
+        should be:   (implementation-dependent), same as above
+  Discr:             0
+        should be:   0
+  Enum_Comp:         1
+        should be:   1
+  Int_Comp:          18
+        should be:   18
+  Str_Comp:          DHRYSTONE PROGRAM, SOME STRING
+        should be:   DHRYSTONE PROGRAM, SOME STRING
+Int_1_Loc:           5
+        should be:   5
+Int_2_Loc:           13
+        should be:   13
+Int_3_Loc:           7
+        should be:   7
+Enum_Loc:            1
+        should be:   1
+Str_1_Loc:           DHRYSTONE PROGRAM, 1'ST STRING
+        should be:   DHRYSTONE PROGRAM, 1'ST STRING
+Str_2_Loc:           DHRYSTONE PROGRAM, 2'ND STRING
+        should be:   DHRYSTONE PROGRAM, 2'ND STRING
+
+Microseconds for one run through Dhrystone:    0.2
+Dhrystones per Second:                      6090134.0
+
+root@OK527:/#
+```
+
+## 4.25 查看chip-id
+串口调试终端输入：
+
+```plain
+root@OK527:/# cat /sys/class/sunxi_info/sys_info
+sunxi_platform    : T527
+sunxi_secure      : normal
+sunxi_serial      : 40821e9375789d0c000050c000000000
+sunxi_chiptype    : 00005f10
+sunxi_batchno     : 0x18900002
+sunxi_soc_ver    : 0x2
+```
+
+## 4.26 CAN测试
+底板上有两路CAN，引出到P41连接座。
+
+分别短接can0和can1的H，L，GND，进行测试。
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594315713-3414102a-7d61-464d-b2db-473b04f83e40.jpg)
+
+
+
+设置can服务
+
+```plain
+root@OK527:/# ip link set awlink0 up type can bitrate 500000
+[58659.636796] IPv6: ADDRCONF(NETDEV_CHANGE): can0: link becomes ready
+root@OK527:/# ip link set awlink1 up type can bitrate 500000
+[58662.966792] IPv6: ADDRCONF(NETDEV_CHANGE): can1: link becomes ready
+root@OK527:/# ip link set dev awlink0 txqueuelen 4096
+root@OK527:/# ip link set dev awlink1 txqueuelen 4096
+```
+
+设置can0接收，can1发送
+
+```plain
+root@OK527:/# candump awlink0 &
+[1] 18633
+root@OK527:/# cangen  awlink1
+ awlink0  790  [1]  A4
+ awlink0  3A0  [3]  31 A1 15
+ awlink0  04B  [2]  DD EF
+ awlink0  39D  [8]  AE 37 BF 78 59 95 FB 68
+ awlink0  6A6  [2]  D2 DE
+ awlink0  59D  [4]  A5 60 7F 04
+ awlink0  019  [0]
+
+```
+
+**通过执行can.sh进行快捷测试**
+
+```plain
+root@OK527:~# can.sh
+
+read: Network is down
+[2023-11-21 21:01:13] [temp=46250] [OK  ] can awlink1 ---> awlink0 speed=20000 op=-
+[2023-11-21 21:01:13] [temp=46620] [OK  ] can awlink1 ---> awlink0 speed=20000 op=-e
+[2023-11-21 21:01:13] [temp=46398] [OK  ] can awlink1 ---> awlink0 speed=20000 op=-R
+[2023-11-21 21:01:13] [temp=46546] [OK  ] can awlink1 ---> awlink0 speed=20000 op=-eR
+[2023-11-21 21:01:13] [temp=46694] [OK  ] can awlink0 ---> awlink1 speed=20000 op=-
+[2023-11-21 21:01:13] [temp=46694] [OK  ] can awlink0 ---> awlink1 speed=20000 op=-e
+[2023-11-21 21:01:13] [temp=46546] [OK  ] can awlink0 ---> awlink1 speed=20000 op=-R
+[2023-11-21 21:01:14] [temp=46694] [OK  ] can awlink0 ---> awlink1 speed=20000 op=-eR
+[2023-11-21 21:01:14] [temp=46546] [OK  ] can awlink1 ---> awlink0 speed=25000 op=-
+
+...
+```
+
+
+
+## 4.27 SPI测试
+OK527底板引出了spi1，位于P29端子  
+短接SPI1_MOSI和SPI1_MISO进行测试
+
+```plain
+root@OK527:/# fltest_spidev_test -D /dev/spidev0.0 -s 1000000
+spi mode: 0
+bits per word: 8
+max speed: 1000000 Hz (1000 KHz)
+
+FF FF FF FF FF FF
+40 00 00 00 00 95
+FF FF FF FF FF FF
+FF FF FF FF FF FF
+FF FF FF FF FF FF
+DE AD BE EF BA AD
+F0 0D
+
+PASS
+```
+
+如果spi通信有问题则受到的数据全部为00
+
+```plain
+root@OK527:/# fltest_spidev_test -D /dev/spidev0.0 -s 1000000
+spi mode: 0
+bits per word: 8
+max speed: 1000000 Hz (1000 KHz)
+
+00 00 00 00 00 00
+00 00 00 00 00 00
+00 00 00 00 00 00
+00 00 00 00 00 00
+00 00 00 00 00 00
+00 00 00 00 00 00
+00 00
+
+ERR: rx != tx
+```
+
+## **4.28 GPIO测试**
+以PJ24为例，PJ24可以控制D10 蓝色led。
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594315812-a32ed4d1-d095-4d94-8efe-806f0f2c5a42.jpg)
+
+
+
+设置PJ24输出低电平
+
+```plain
+root@OK527:/# fltest_gpio.sh PJ24 0
+=== PJ24 === gpio312 ===
+out: 0
+```
+
+读取PJ24引脚输入电平
+
+```plain
+root@OK527:/# fltest_gpio.sh PJ24 in
+=== PJ24 === gpio312===
+read: 1
+```
+
+## **4.29蜂鸣器测试**
+OK527-C的蜂鸣器为无源蜂鸣器，输入pwm信号即可。
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594315907-a246e1b7-4409-48ea-8d76-10a1f319bdb3.jpg)
+
+
+
+设置PJ24输出高电平
+
+```plain
+root@OK527:/# echo 8 > /sys/class/pwm/pwmchip0/export
+root@OK527:/# echo 10000000 > /sys/class/pwm/pwmchip0/pwm8/period
+root@OK527:/# echo 5000000 > /sys/class/pwm/pwmchip0/pwm8/duty_cycle
+root@OK527:/# echo 1 > /sys/class/pwm/pwmchip0/pwm8/enable  //使能蜂鸣器
+root@OK527:/# echo 0 > /sys/class/pwm/pwmchip0/pwm8/enable  //关闭蜂鸣器
+root@OK527:/# echo 8 > /sys/class/pwm/pwmchip0/unexport
+root@OK527:/# 
+```
+
+## 4.30 USB3.0
+OK527-C的USB3.0和PCIE为复用功能，同一时间只有一个工作。需要在uboot菜单切换功能。
+
+更改底板拨码开关，选择USB3.0，开发板上电之后按空格进入uboot菜单界面，按6会在“pcie”“usb 3.0”循环，选择“usb 3.0”如下所示
+
+---------------------------------------------
+
+0:Exit to console
+
+1:Reboot
+
+2:Display0 Type:lvds 1280x800
+
+3:Display1 Type:hdmi 1280x720P60
+
+4:Device PHY Type:usb 3.0
+
+---------------------------------------------
+
+之后按1重启，即可测试usb3.0功能，测试方法参考[4.14 USB 2.0](#_4.14_USB_2.0)
+
+## 4.31 PCIE
+OK527-C的USB3.0和PCIE为复用功能，同一时间只能一个工作。需要在uboot菜单切换功能。  
+更改底板拨码开关，选择PCIE2.1，开发板上电之后按空格进入uboot菜单界面，按4会在“pcie”“usb 3.0”循环，选择“pcie”如下所示
+
+```plain
+0:Exit to console
+1:Reboot
+2:Display0 Type:lvds 1280x800
+3:Display1 Type:hdmi 1280x720P60
+4:Device PHY Type:pcie
+---------------------------------------------
+```
+
+之后按1重启，即可测试pcie功能。
+
+以下使用RTL8125网卡测试。
+
+```plain
+root@OK527:~# ifconfig -a | grep enp -A 5
+enp1s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.20.0.129  netmask 255.255.0.0  broadcast 172.20.255.255
+        inet6 fe80::2e0:4cff:fe64:589e  prefixlen 64  scopeid 0x20<link>
+        ether 00:e0:4c:64:58:9e  txqueuelen 1000  (Ethernet)
+        RX packets 2584  bytes 1571448 (1.5 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+
+root@OK527:/# udhcpc -i enp1s0     //DHCP获取IP
+udhcpc: started, v1.35.0
+[  159.913780] RTL8226 2.5Gbps PHY r8169-0-100:00: attached PHY driver (mii_bus:phy_addr=r8169-0-100:00, irq=MAC)
+[  160.045865] r8169 0000:01:00.0 eth2: Link is Down
+udhcpc: broadcasting discover
+[  162.959563] r8169 0000:01:00.0 eth2: Link is Up - 1Gbps/Full - flow control rx/tx
+[  162.968058] IPv6: ADDRCONF(NETDEV_CHANGE): eth2: link becomes ready
+udhcpc: broadcasting discover
+udhcpc: broadcasting select for 192.168.1.34, server 192.168.1.1
+udhcpc: lease of 192.168.1.34 obtained from 192.168.1.1, lease time 86400
+deleting routers
+adding dns 192.168.1.1
+root@OK527:/# iperf3 -c 192.168.1.39    //测试上传速度
+Connecting to host 192.168.1.39, port 5201
+[  5] local 192.168.1.34 port 60964 connected to 192.168.1.39 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   114 MBytes   957 Mbits/sec    0    234 KBytes
+[  5]   1.00-2.00   sec   114 MBytes   952 Mbits/sec    0    234 KBytes
+[  5]   2.00-3.00   sec   113 MBytes   946 Mbits/sec    0    234 KBytes
+[  5]   3.00-4.00   sec   113 MBytes   951 Mbits/sec    0    234 KBytes
+[  5]   4.00-5.00   sec   113 MBytes   947 Mbits/sec    0    234 KBytes
+[  5]   5.00-6.00   sec   113 MBytes   951 Mbits/sec    0    234 KBytes
+[  5]   6.00-7.00   sec   113 MBytes   950 Mbits/sec    0    234 KBytes
+[  5]   7.00-8.00   sec   113 MBytes   950 Mbits/sec    0    234 KBytes
+[  5]   8.00-9.00   sec   113 MBytes   949 Mbits/sec    0    234 KBytes
+[  5]   9.00-10.00  sec   113 MBytes   950 Mbits/sec    0    234 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.11 GBytes   950 Mbits/sec    0             sender
+[  5]   0.00-10.00  sec  1.11 GBytes   949 Mbits/sec                  receiver
+
+iperf Done.
+root@OK527:/# iperf3 -c 192.168.1.39 -R     //测试下载速度
+Connecting to host 192.168.1.39, port 5201
+Reverse mode, remote host 192.168.1.39 is sending
+[  5] local 192.168.1.34 port 58154 connected to 192.168.1.39 port 5201
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec   112 MBytes   943 Mbits/sec
+[  5]   1.00-2.00   sec   112 MBytes   943 Mbits/sec
+[  5]   2.00-3.00   sec   112 MBytes   943 Mbits/sec
+[  5]   3.00-4.00   sec   112 MBytes   943 Mbits/sec
+[  5]   4.00-5.00   sec   112 MBytes   943 Mbits/sec
+[  5]   5.00-6.00   sec   112 MBytes   943 Mbits/sec
+[  5]   6.00-7.00   sec   112 MBytes   943 Mbits/sec
+[  5]   7.00-8.00   sec   112 MBytes   943 Mbits/sec
+[  5]   8.00-9.00   sec   112 MBytes   943 Mbits/sec
+[  5]   9.00-10.00  sec   112 MBytes   943 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.00  sec  1.10 GBytes   943 Mbits/sec                  sender
+[  5]   0.00-10.00  sec  1.10 GBytes   943 Mbits/sec                  receiver
+
+iperf Done.
+root@OK527:/#
+```
+
+注：网速遵循“木桶效应”此次测试中RTL8125为2.5G网卡，但是192.168.1.39电脑的网卡为千兆网卡，故最终测试速度为千兆速度。
+
+## 4.32 IR-RX
+OK527-C的支持红外接收。
+
+```plain
+root@OK527:/# evtest 
+No device specified, trying to scan all of /dev/input/event*
+Available devices:
+/dev/input/event0:	sunxi-keyboard
+/dev/input/event1:	sunxi_ir_recv
+/dev/input/event2:	sunxi-gpadc0/channel3/input0
+/dev/input/event3:	sunxi-gpadc0/channel4/input0
+/dev/input/event4:	sunxi-gpadc0/channel5/input0
+/dev/input/event5:	sunxi-gpadc0/channel6/input0
+/dev/input/event6:	sunxi-gpadc0/channel7/input0
+/dev/input/event7:	sunxi-gpadc1/channel0/input0
+/dev/input/event8:	sunxi-gpadc1/channel1/input0
+/dev/input/event9:	sunxi-gpadc1/channel2/input0
+/dev/input/event10:	sunxi-gpadc1/channel3/input0
+/dev/input/event11:	sunxi-gpadc1/channel4/input0
+/dev/input/event12:	sunxi-gpadc1/channel5/input0
+/dev/input/event13:	sunxi-gpadc1/channel6/input0
+/dev/input/event14:	sunxi-gpadc1/channel7/input0
+/dev/input/event15:	sunxi-gpadc1/channel8/input0
+/dev/input/event16:	axp2202-pek
+/dev/input/event17:	audiocodec Headphones
+Select the device event number [0-17]: 1      //选择sunxi_ir_recv对应的event编号
+Input driver version is 1.0.1
+Input device ID: bus 0x19 vendor 0x1 product 0x1 version 0x100
+Input device name: "sunxi_ir_recv"
+Supported events:
+  Event type 0 (EV_SYN)
+  Event type 1 (EV_KEY)
+    Event code 14 (KEY_BACKSPACE)
+    Event code 15 (KEY_TAB)
+    Event code 52 (KEY_DOT)
+    Event code 83 (KEY_KPDOT)
+    Event code 102 (KEY_HOME)
+    Event code 103 (KEY_UP)
+    Event code 105 (KEY_LEFT)
+    Event code 106 (KEY_RIGHT)
+    Event code 108 (KEY_DOWN)
+    Event code 113 (KEY_MUTE)
+    Event code 114 (KEY_VOLUMEDOWN)
+    Event code 115 (KEY_VOLUMEUP)
+    Event code 116 (KEY_POWER)
+    Event code 119 (KEY_PAUSE)
+    Event code 128 (KEY_STOP)
+    Event code 139 (KEY_MENU)
+    Event code 141 (KEY_SETUP)
+    Event code 158 (KEY_BACK)
+    Event code 163 (KEY_NEXTSONG)
+    Event code 164 (KEY_PLAYPAUSE)
+    Event code 165 (KEY_PREVIOUSSONG)
+    Event code 166 (KEY_STOPCD)
+    Event code 168 (KEY_REWIND)
+    Event code 207 (KEY_PLAY)
+    Event code 208 (KEY_FASTFORWARD)
+    Event code 256 (BTN_0)
+    Event code 352 (KEY_OK)
+    Event code 365 (KEY_EPG)
+    Event code 377 (KEY_TV)
+    Event code 402 (KEY_CHANNELUP)
+    Event code 403 (KEY_CHANNELDOWN)
+    Event code 407 (KEY_NEXT)
+    Event code 412 (KEY_PREVIOUS)
+    Event code 512 (KEY_NUMERIC_0)
+    Event code 513 (KEY_NUMERIC_1)
+    Event code 514 (KEY_NUMERIC_2)
+    Event code 515 (KEY_NUMERIC_3)
+    Event code 516 (KEY_NUMERIC_4)
+    Event code 517 (KEY_NUMERIC_5)
+    Event code 518 (KEY_NUMERIC_6)
+    Event code 519 (KEY_NUMERIC_7)
+    Event code 520 (KEY_NUMERIC_8)
+    Event code 521 (KEY_NUMERIC_9)
+    Event code 717 (BTN_TRIGGER_HAPPY14)
+    Event code 719 (BTN_TRIGGER_HAPPY16)
+    Event code 721 (BTN_TRIGGER_HAPPY18)
+  Event type 2 (EV_REL)
+    Event code 0 (REL_X)
+    Event code 1 (REL_Y)
+  Event type 4 (EV_MSC)
+    Event code 4 (MSC_SCAN)
+Key repeat handling:
+  Repeat type 20 (EV_REP)
+    Repeat code 0 (REP_DELAY)
+      Value    400
+    Repeat code 1 (REP_PERIOD)
+      Value     80
+Properties:
+  Property type 5 (INPUT_PROP_POINTING_STICK)
+Testing ... (interrupt to exit)
+Event: time 1704962021.400475, type 4 (EV_MSC), code 4 (MSC_SCAN), value 15
+Event: time 1704962021.400475, type 1 (EV_KEY), code 519 (KEY_NUMERIC_7), value 1
+Event: time 1704962021.400475, -------------- SYN_REPORT ------------
+Event: time 1704962021.452943, type 4 (EV_MSC), code 4 (MSC_SCAN), value 15
+Event: time 1704962021.452943, -------------- SYN_REPORT ------------
+Event: time 1704962021.696805, type 1 (EV_KEY), code 519 (KEY_NUMERIC_7), value 0
+Event: time 1704962021.696805, -------------- SYN_REPORT ------------
+Event: time 1704962024.777524, type 4 (EV_MSC), code 4 (MSC_SCAN), value 46
+Event: time 1704962024.777524, -------------- SYN_REPORT ------------
+Event: time 1704962024.829971, type 4 (EV_MSC), code 4 (MSC_SCAN), value 46
+Event: time 1704962024.829971, -------------- SYN_REPORT ------------
+^Croot@OK527:/#
+```
+
+## **4.33 蓝牙测试**
+OK527-C底板的AW-CM358模块，集成了蓝牙功能，本节演示使用手机与开发板之间通过蓝牙进行文件传输。
+
+蓝牙配置
+
+```plain
+root@OK527:/#fltest_cm358.sh start      //若测试wifi执行过则跳过
+root@OK527:/# bluetoothctl                             //打开BlueZ蓝牙设备           
+Agent registered
+[CHG] Controller E8:FB:1C:66:FA:A6 Pairable: yes
+[bluetooth]# power on          //使能蓝牙设备
+[CHG] Controller E8:FB:1C:66:FA:A6 Class: 0x00100000
+Changing power on succeeded
+[CHG] Controller E8:FB:1C:66:FA:A6 Powered: yes
+[bluetooth]# pairable on       //设置为可配对模式
+Changing pairable on succeeded
+[bluetooth]# discoverable on   //设置为可被发现模式
+Changing discoverable on succeeded
+[CHG] Controller E8:FB:1C:66:FA:A6 Discoverable: yes
+[bluetooth]# agent on        //启用代理
+Agent is already registered
+[bluetooth]# default-agent    //设置当前代理为默认代理
+Default agent request successful
+[bluetooth]# 
+```
+
+1、 开发板被动配对
+
+经过上述设置后，打开电脑搜索蓝牙，点击“添加蓝牙或其他设备”，会出现一个”OKT527”的设备，点击此蓝牙尝试配对，
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594316015-84316169-fee8-4acf-91a7-243ef9585453.jpg)
+
+同时开发板上打印信息如下，输入yes：
+
+```plain
+[CHG] Device 2C:DB:07:C7:4F:F6 Connected: yes
+Request confirmation
+[agent] Confirm passkey 153732 (yes/no): yes
+```
+
+2、查看和移除连接设备：
+
+```plain
+[bluetooth]# devices                      //查看连接的蓝牙设备Device 2C:DB:07:C7:4F:F6 DESKTOP-VND9V1F
+[bluetooth]# remove 2C:DB:07:C7:4F:F6             //移除设备
+[DEL] Device 2C:DB:07:C7:4F:F6 DESKTOP-VND9V1F
+Device has been removed
+```
+
+3、开发板主动配对
+
+除了被动配对，也可以在开发板终端发送主动配对的请求。
+
+```plain
+[bluetooth]# scan on        //开启扫描
+Discovery started
+[CHG] Controller E8:FB:1C:66:FA:A6 Discovering: yes
+[NEW] Device 7B:01:59:ED:69:50 7B-01-59-ED-69-50
+[NEW] Device 7C:71:13:5F:A3:8F 7C-71-13-5F-A3-8F
+[NEW] Device 14:16:9E:62:39:BD zzy 
+[NEW] Device 2C:DB:07:C7:4F:F6 DESKTOP-VND9V1F  //找到要配对的设备
+[CHG] Device 14:16:9E:62:39:BD RSSI: -74
+[bluetooth]# scan off        //关闭扫描
+Discovery stopped
+[CHG] Device 2C:DB:07:C7:4F:F6 TxPower is nil
+[CHG] Device 2C:DB:07:C7:4F:F6 RSSI is nil
+[CHG] Device 14:16:9E:62:39:BD RSSI is nil
+[CHG] Device 7C:71:13:5F:A3:8F TxPower is nil
+[CHG] Device 7C:71:13:5F:A3:8F RSSI is nil
+[CHG] Device 7B:01:59:ED:69:50 RSSI is nil
+[CHG] Controller E8:FB:1C:66:FA:A6 Discovering: no
+[bluetooth]# pair 2C:DB:07:C7:4F:F6        //与指定设备配对
+Attempting to pair with 14:16:9E:62:39:BD
+[CHG] Device 14:16:9E:62:39:BD Connected: yes
+Request confirmation
+[agent] Confirm passkey 807166 (yes/no): yes        //确认密钥
+[CHG] Device 14:16:9E:62:39:BD Modalias: bluetooth:v000Fp1200d1436
+[CHG] Device 14:16:9E:62:39:BD UUIDs: 00001105-0000-1000-8000-00805f9b34fb
+......
+[CHG] Device 14:16:9E:62:39:BD UUIDs: fa88c0d0-afac-11de-8a99-0800200c9a67
+[CHG] Device 14:16:9E:62:39:BD ServicesResolved: yes
+[CHG] Device 14:16:9E:62:39:BD Paired: yes
+Pairing successful
+[CHG] Device 14:16:9E:62:39:BD ServicesResolved: no
+[CHG] Device 14:16:9E:62:39:BD Connected: no
+[bluetooth]# 
+```
+
+同时电脑界面出现配对请求，点击配对，板端打印输入yes，端配对成功。
+
+4、开发板接收文件
+
+配对成功后，在电脑端，可以使用蓝牙发送文件至板端。
+
+点击“通过蓝牙发送或接收文件”
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594316106-ae3bb215-1ef0-46c4-9c10-9c0ca0ccfefe.jpg)
+
+
+
+选择发送文件
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594316194-fdbde543-8b7b-4758-b7a3-dbd154599e12.jpg)
+
+
+
+选择OKT527
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594316287-995bf224-0c7f-455d-baf4-bd6b4a080054.jpg)
+
+
+
+选择要发送的文件
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594316385-fb198e6f-a68c-485e-81a5-ed79694dad5b.jpg)
+
+
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594316533-2fcb8a3a-7488-4ef7-a587-4e04a7abd2f6.jpg)
+
+
+
+等待发送完成
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594316627-f9fb78e0-043f-4ea0-b758-f2bb0af96dde.jpg)
+
+
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594316748-08e4bce8-9e02-4292-bb6c-26888b10a415.jpg)
+
+
+
+接收到的文件保存在/tmp目录。
+
+5、开发板发送文件
+
+同样，可以用开发板发送文件至电脑端，测试方法如下：
+
+电脑端选择“接收文件”
+
+![](https://cdn.nlark.com/yuque/0/2024/jpg/50461850/1734594316946-65acfeb3-a491-477f-850c-6ec2a3371e7a.jpg)
+
+
+
+
+
+```plain
+root@OK527:~# bluetoothctl 
+Agent registered
+[CHG] Controller E8:FB:1C:66:FA:A6 Pairable: yes
+[bluetooth]# paired-devices        //查看已配对设备
+Device 2C:DB:07:C7:4F:F6 DESKTOP-VND9V1F
+[bluetooth]# exit
+root@OK527:~# fltest_obexctl.sh 
+[NEW] Client /org/bluez/obex 
+[obex]# connect   2C:DB:07:C7:4F:F6     //链接指定设备
+Attempting to connect to 2C:DB:07:C7:4F:F6
+[NEW] Session /org/bluez/obex/client/session0 [default]
+[NEW] ObjectPush /org/bluez/obex/client/session0 
+Connection successful
+[2C:DB:07:C7:4F:F6]# send /media/audio/30s.wav  //发送文件
+Attempting to send /run/media/mmcblk0p1/bootlogo.bmp to /org/bluez/obex/client/session0
+[NEW] Transfer /org/bluez/obex/client/session0/transfer0 
+Transfer /org/bluez/obex/client/session0/transfer0
+        Status: queued
+        Name: bootlogo.bmp
+        Size: 1339239
+        Filename: /run/media/mmcblk0p1/bootlogo.bmp
+        Session: /org/bluez/obex/client/session0
+[CHG] Transfer /org/bluez/obex/client/session0/transfer0 Status: active
+[CHG] Transfer /org/bluez/obex/client/session0/transfer0 Transferred: 65433 (@65KB/s 00:19)
+[CHG] Transfer /org/bluez/obex/client/session0/transfer0 Transferred: 130961 (@65KB/s 00:18)
+.....
+[CHG] Transfer /org/bluez/obex/client/session0/transfer0 Status: complete
+[DEL] Transfer /org/bluez/obex/client/session0/transfer0 
+[2C:DB:07:C7:4F:F6]# exit
+root@OK527:~# 
+```
+
+电脑将收到传入文件请求，进行文件传输。
+
+## 4.34 NPU测试
+**注：该项测试不支持FET527-C型号核心板**  
+FET527N-C集成了2Tops NPU，目前内置了Fairmot、MobileNet_V2、VGG19、struct2depth、yolact、yolov5s-sim-640六个模型。  
+本节主要通过例程演示NPU的使用方法。  
+NPU测试例程位置如下：
+
+```plain
+root@OK527:~# cd /etc/npu/sample_viplite
+root@OK527:/etc/npu/sample_viplite# ls
+Fairmot  MobileNet_V2  VGG19  struct2depth  yolact  yolov5s-sim-640
+
+root@OK527:/etc/npu/sample_viplite/Fairmot# ls
+1088x608x3.dat  network_binary.nb  sample.txt
+
+//  1088x608x3.dat   为测试用输入数据 
+//  network_binary.nb 为测试用网络模型
+//  sample.txt        为测试配置文件
+```
+
+
+
+配置文件内容如下：     
+
+```plain
+root@OK527:/etc/npu/sample_viplite/Fairmot# cat sample.txt
+
+vpm_run is a framework for testing VIPLite driver.
+
+#You may put comment by starting with a '#'.
+#####################################################A separator makes the list clear.
+[network]
+/etc/npu/sample_viplite/Fairmot/network_binary.nb      //指定要使用的网络模型
+[input]
+/etc/npu/sample_viplite/Fairmot/1088x608x3.dat        //指定输入数据   
+```
+
+还可通过在配置文件中添加[ golden]	和[output]来添加对比文件和输出文件：
+
+```plain
+[network]
+./ network_binary.nb
+[input]
+./ input_0.dat
+[ golden]						//对比文件
+./ output0_10_1.dat
+[output]						//输出文件
+./ output_0.dat            
+```
+
+
+
+运行方法如下： -l 10表示执行10次 测试结果如下
+
+```plain
+root@OK527:/etc/npu/sample_viplite/Fairmot# vpm_run -s sample.txt -l 10
+loop_count=10, device_id=0, file_name=sample.txt
+test started.
+init vip lite, driver version=0x00010d00...
+VIPLite driver software version 1.13.0.0-AW-2023-10-19
+vip lite init OK.
+
+cid=0x10000016, device_count=1
+  device[0] core_count=1
+init test resources, batch_count: 1 ...
+create/prepare networks ...
+batch i=0, binary name: /etc/npu/sample_viplite/Fairmot/network_binary.nb
+input 0 dim 1088 608 3 1, data_format=2, quant_format=2, name=input[0], scale=1.000000, zero_point=0
+ouput 0 dim 272 152 1 1, data_format=2, name=uid_9_out_0, scale=0.003889, zero_point=0
+ouput 1 dim 272 152 4 1, data_format=2, name=uid_8_out_0, scale=0.123799, zero_point=39
+ouput 2 dim 272 152 2 1, data_format=2, name=uid_7_out_0, scale=0.024050, zero_point=32
+ouput 3 dim 272 152 1 1, data_format=2, name=uid_6_out_0, scale=0.003889, zero_point=0
+ouput 4 dim 128 272 152 1, data_format=1, name=uid_41_out_0, none-quant
+nbg name=/etc/npu/sample_viplite/Fairmot/network_binary.nb
+create network 0: 26301 us.
+memory pool size=17419776byte
+network core count=1
+input 0 name: /etc/npu/sample_viplite/Fairmot/1088x608x3.dat
+prepare network 0: 35679 us.
+batch: 0, loop count: 1
+start to run network=/etc/npu/sample_viplite/Fairmot/network_binary.nb
+run time for this network 0: 346532 us.
+run network done...
+profile inference time=344865us, cycle=239992405
+******* nb TOP5 ********
+ --- Top5 ---
+40528: 0.987698
+1088: 0.979921
+1360: 0.976033
+1632: 0.976033
+1904: 0.976033
+******* nb TOP5 ********
+ --- Top5 ---
+165375: 26.740648
+165374: 20.055487
+165373: 18.941294
+165105: 15.846311
+81599: 14.979715
+******* nb TOP5 ********
+ --- Top5 ---
+80179: 3.246813
+80312: 3.246813
+80327: 3.246813
+80351: 3.246813
+80359: 3.246813
+******* nb TOP5 ********
+ --- Top5 ---
+40256: 0.987698
+40257: 0.987698
+40528: 0.987698
+40529: 0.987698
+40800: 0.987698
+******* nb TOP5 ********
+ --- Top5 ---
+  7: 0.329834
+5222406: 0.302002
+5222534: 0.301758
+5222662: 0.300781
+5222790: 0.290527
+```
+
+## 4.35 docker测试
+保持联网状态，使用dockers执行hello-world，等待下载完成显示如下信息**Hello from Docker!**即可。
+
+```plain
+root@OK527:/# docker run hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+478afc919002: Pull complete
+Digest: sha256:305243c734571da2d100c8c8b3c3167a098cab6049c9a5b066b6021a60fcb966
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (arm64v8)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+```
+
+## 4.36 安装中文环境
+```plain
+apt install ttf-wqy-zenhei ttf-wqy-microhei fonts-arphic-ukai fonts-arphic-uming -y
+```
+
+
+
+## 4.37 安装完整版Xubuntu
+当前文件系统桌面只安装了xfce4 + lightdm
+
+如需要更完整的ubuntu功能，如音视频播放应用，可自行安装完整版Xubuntu
+
+```plain
+apt install xubuntu-desktop -y
+```
+
+
+
+## 4.38 挂载剩余分区
+格式化分区  **mmcblk0p5**
+
+```plain
+root@OK527:~# mkfs.vfat /dev/mmcblk0p5 -I
+mkfs.fat 4.2 (2021-01-31)
+```
+
+查看当前分区
+
+```plain
+root@OK527:~# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       7.1G  4.7G  2.5G  66% /
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           777M  2.0M  775M   1% /run
+tmpfs           5.0M  4.0K  5.0M   1% /run/lock
+tmpfs           389M   44K  389M   1% /run/user/1000
+tmpfs           389M   32K  389M   1% /run/user/0
+```
+
+创建挂载目录并挂载
+
+```plain
+root@OK527:~# mkdir /forlinx/user
+root@OK527:~# mount /dev/mmcblk0p5 /forlinx/user
+root@OK527:~# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       7.1G  4.7G  2.5G  66% /
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           777M  2.0M  775M   1% /run
+tmpfs           5.0M  4.0K  5.0M   1% /run/lock
+tmpfs           389M   44K  389M   1% /run/user/1000
+tmpfs           389M   32K  389M   1% /run/user/0
+/dev/mmcblk0p5   22G   16K   22G   1% /forlinx/user
+
+```
+
+
+
+# 05_烧写系统
+
+OK527-C开发板目前支持OTG和TF卡两种烧写方式。在用户资料中提供了相应的烧写工具，用户可选择任意一种方式进行镜像烧写。
+
+## 5.1 烧写所需镜像
+1镜像路径：软件资料\2-镜像及源码\0-镜像
+
+| **镜像** | **说明** |
+| --- | --- |
+| t527_linux_ok527_uart0.img | 出厂默认镜像（eMMC） |
+
+
+**注意**：提供的镜像文件进行了压缩处理，请先解压再烧写
+
+## 5.2  OTG烧写
+### 5.2.1  烧写工具安装
+1 路径：软件资料\3-工具\PhoenixSuit_V1.10.zip
+
+
+
+将PhoenixSuit_V1.10.zip解压，使用Type-C线连接开发板和电脑。
+
+打开电脑的“设备管理器”，如果有未知设备，选择手动安装驱动，右键未知设备，选择“更新驱动”
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594318742-06d4091c-997f-4fa4-885a-49cfa495557d.png)
+
+选则“浏览我的电脑以查找驱动程序”之后选择解压后的PhoenixSuit_V1.10目录
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594318824-4c3532e2-ac89-4c08-95fe-d8969f5c1bd3.png)
+
+在如下界面中，选择刚才解压 USBDriver_64 目录：
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594318909-06b07c38-258e-492b-887b-66c5f3fa2bf1.png)
+
+点击”下一步”等待驱动安装完成。
+
+如下界面所示：
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594319002-db4e2007-5e27-43e2-98c9-96c3931bc736.png)
+
+### 5.2.2 OTG 烧写方法
+1、 OTG完全烧写测试
+
+该烧写方式会将整个img镜像进行烧录。
+
+如下界面所示：
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594319082-d3c0c6a6-800e-4c78-adca-ffc2aabbc8d4.png)
+
+在如下界面中， 点击”一键刷机” 再点击”浏览” 选择固件镜像文件。
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594319183-3730d085-254c-43c5-832f-3002b138943d.png)
+
+使用Type-A转Type-C线连接开发板和主机，给板子供电，同时按下FEL键和RESET键，先松开RESET键，在松开FEL键。
+
+ **注意：一定要先松RESET键，再松开FEL键。**
+
+在如下界面中，点击”是” 进入格式化升级模式：
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594319311-114f5059-91e5-4fd1-99c1-fc56f07cec1c.png)
+
+等待烧写完成，烧写完成弹出如下界面：
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594319589-99c04891-0bc8-45e3-8313-3dfc628cf53f.png)
+
+	上电启动OK527板卡。
+
+ **注意：不建议单独烧写固件，容易出现烧写失败情况。**
+
+2、单独更新镜像
+
+1）OTG uboot 单独烧写测试
+
+在如下界面中， 勾选复选框”单或多分区下载(勾选此项，刷机工具下载你选择的分区)”，勾
+
+选”BOOT-RESOURCE”和”ENV” 复选框。
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594319800-53f2d675-03b5-4fc4-838b-aa12cad555ef.png)
+
+
+
+使用 Micro USB 线连接开发板和主机，给板子供电，同时按下 FEL 键和 RESET 键，先松开 RESET  
+键，在松开 FEL 键。等待烧写，烧写完成弹出如下界面：  
+**注意：一定要先松 RESET 键，再松开 FEL 键。**
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594319948-d195a195-d1d0-4bc0-8c6b-7954b19c2a17.png)
+
+
+
+2）OTG 烧写内核镜像以及设备树 dtb 文件
+
+在如下界面中， 勾选复选框”单或多分区下载(勾选此项，刷机工具下载你选择的分区)”，勾选”BOOT”
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320087-b039e40f-e4ba-47e4-acb9-de9f456f2d2f.png)
+
+使用 Micro USB 线连接开发板和主机，给板子供电，同时按下 FEL 键和 RESET 键，先松开 RESET  
+键，在松开 FEL 键。等待烧写，烧写完成弹出如下界面：  
+**注意：一定要先松 RESET 键，再松开 FEL 键。**
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320198-367cb6b4-9841-453b-a83d-05227539add1.png)
+
+3） OTG 烧写文件系统
+
+在如下界面中， 勾选复选框”单或多分区下载(勾选此项，刷机工具下载你选择的分区)”，勾
+
+选”ROOTFS”。
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320276-66b37ac0-d07d-4aa2-8725-964dc849b015.png)
+
+使用 Micro USB 线连接开发板和主机，给板子供电，同时按下 FEL 键和 RESET 键，先松开 RESET  
+键，在松开 FEL 键。等待烧写，烧写完成弹出如下界面：  
+**注意：一定要先松 RESET 键，再松开 FEL 键。**
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320367-d5d433ef-333a-461e-97b4-0e0c9fca1070.png)
+
+### 5.2.3 OTG 烧写常见问题
+1、驱动安装不成功
+
+	有些用户按照手册中的方法安装完USB驱动后，仍显示未知设备，点开未知设备后有第三方 INF不包含数字签名信息的信息，如下图：
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320471-19e967df-af0d-4552-a073-ad03c63f1b9f.png)
+
+	这是由于有些windows系统为了不让第三方程序影响系统稳定性，导致部分未签名驱动无法通过验证，导致驱动安装失败。用户需要先对电脑禁用驱动程序强制签名设置，然后在安装手册方法进行驱动安装。
+
+（1）第三方INF不包含数字签名信息问题解决方法
+
+  1.首先按住 Shift+重启
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320541-810e69a6-6c91-4f39-9a47-ed19c6abb490.png)
+
+2.启动时选择 疑难解答--高级选项--启动设置
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320615-2413dfa1-7888-440d-94ab-300ee4dce45c.png)
+
+3.在启动设置界面，点击右下角的重启，重启进入到启动设置，可以通过数字键 7 或功能键 F7，禁用驱动程序强制签名
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320697-492ae8df-0671-4236-90f9-3dd52a868e1e.png)
+
+2、RESET和FEL按键使用不当
+
+烧写时，需要同时按下RESET键和FEL键，松开的时候，先松开RESET键，然后松开FEL键。
+
+3、已经出现设备名，但还是无法识别板子。
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320764-886e3fab-4129-439c-8532-547f1c78bd4d.png)
+
+这是因为设备管理器中有很多未知设备，选错可能导致驱动安装到其他设备的位置上，可以先右击上述设备项，选择卸载设备，勾选卸载设备驱动程序
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320846-0db79049-d440-43ab-a805-b95d361c0c15.png)
+
+卸载后把主机上插的其他usb接口设备拔掉，让开发板进入烧录模式并连接主机，再重复上述步骤进行安装。
+
+
+
+## 5.3 TF卡烧写
+### 5.3.1制作TF烧写卡
+**制卡工具路径：02-用户资料\01-软件资料\04-工具\PhoenixCard_V4.1.9.zip**
+
+1、通过读卡器把容量大小为8GB/16GB/32GB TF卡插入PC机 USB接口上。
+
+2、将制卡工具PhoenixCard_V4.1.9.zip拷贝到windows任意目录，双击PhoenixCard_V4.1.9目录里PhoenixCard.exe文件。
+
+如下界面所示：
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320923-5610ff5e-f9d7-4a43-9bc2-b65ca25e8242.png)
+
+
+
+ **注意：**当TF卡存在多个分区时，请先点击”恢复卡”，在点击“烧卡”，否则可能烧卡失败。
+
+3、点击”固件”浏览OK527固件镜像，选择”量产卡”，点击”烧卡”。
+
+等待全部烧写完成，如下界面所示：
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594320999-1d9dbb64-40d8-42e1-a3c4-afe06836846e.png)
+
+### 5.3.2 TF卡烧写方法
+1、将TF卡插入开发板，上电启动板卡，系统将自动进入烧写流程。（拨码开关设置参考“[烧写及启动设置](#_1.4_烧写及启动设置)”章节）。
+
+烧写完成后屏幕和串口都将提示：
+
+```plain
+…
+chunk 4392(4395)
+chunk 4393(4395)
+chunk 4394(4395)
+[76.477]successed in writting part rootfs
+origin_verify value = b32fc317, active_verify value = b32fc317
+[76.486]successed in verify part rootfs
+[76.490]successed in download part rootfs
+[76.494]begin to download part riscv0
+partdata hi 0x0
+partdata lo 0x1f39bc
+sparse: bad magic
+[76.599]successed in writting part riscv0
+origin_verify value = 1cc2c38d, active_verify value = 1cc2c38d
+[76.619]successed in verify part riscv0
+[76.623]successed in download part riscv0
+[76.627]begin to download part dsp0
+partdata hi 0x0
+partdata lo 0x4c4b0
+sparse: bad magic
+[76.650]successed in writting part dsp0
+origin_verify value = 9720f44d, active_verify value = 9720f44d
+[76.662]successed in verify part dsp0
+[76.665]successed in download part dsp0
+[76.672]successed in downloading part
+uboot size = 0x16c000
+storage type = 2
+sunxi_sprite_deal_uboot ok
+[76.761]successed in downloading uboot
+[76.768][mmc]: write mmc 2 info ok
+storage type = 2
+[76.780]successed in downloading boot0
+CARD OK
+[76.784]sprite success
+sprite_next_work=1
+next work 1
+SUNXI_UPDATE_NEXT_ACTION_NULL
+==================================================
+|                                                |
+|                 update  finish                 |
+|                                                |
+==================================================
+remind_type : GPIO_LED
+```
+
+2、拔出TF卡，上电启动板卡，即可启动系统。
+
+批量生产时，可以根据核心板的红灯来判断烧写是否完成，烧写过程中的变化如下：
+
+l 烧写准备阶段：核心板红灯，熄灭。
+
+l 烧写完成阶段：核心板红灯，闪烁。
+
+3、 TF卡还原
+
+将 TF 卡插入 windows 主机中，以管理员身份运行 PhoenixCard.exe。
+
+点击”恢复卡”，将烧写 TF 卡恢复成普通的 TF 卡。
+
+![](https://cdn.nlark.com/yuque/0/2024/png/50461850/1734594321074-d4785bc8-e476-49ac-966a-e26c94fe8ced.png)
+
+
+
