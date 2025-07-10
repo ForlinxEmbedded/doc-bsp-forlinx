@@ -1,0 +1,61 @@
+/* 左侧 sidebar 主体 */
+.wy-nav-side {
+  background: #ffffff; /* 主体白底 */
+  color: #333333;       /* 深灰文字 */
+}
+
+/* logo 背景区域（搜索框以上） */
+.wy-side-nav-search {
+  background: #005bac;  /* 飞凌蓝 */
+  padding: 20px 0;
+  border-bottom: 3px solid #005bac;
+}
+
+/* logo 样式 */
+.wy-side-nav-search img {
+  display: block;
+  margin: 0 auto 10px auto;
+  height: 50px;
+  width: auto;
+}
+
+
+/* 搜索框区域整体样式 */
+.wy-side-nav-search input {
+  display: block;
+  margin: 0 auto 10px auto;  /* 居中 + 底部留白 */
+  width: 90%;                /* 比原来的85%宽一点但保留边距 */
+  max-width: 220px;          /* 避免在大分辨率下太宽 */
+  padding: 6px 10px;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #000000;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+
+/* 搜索框下的菜单项 */
+.wy-menu-vertical a {
+  color: #333333;
+  padding: 8px 16px;
+  font-weight: 500;
+}
+
+/* hover 状态 */
+.wy-menu-vertical a:hover {
+  background-color: #e6f0fa;
+  color: #005bac;
+}
+
+/* 当前选中页面 */
+.wy-menu-vertical .current > a {
+  background-color: #005bac;
+  color: #ffffff;
+}
+
+/* 子菜单项缩进显示 */
+.wy-menu-vertical .current > ul li a {
+  padding-left: 30px;
+}
